@@ -1,0 +1,12 @@
+EXAMPLE REPORT - illustrative data,,,,,,,,
+date,competitor,product,url,previous_price_usd,current_price_usd,change_pct,stock_status,alert
+2026-10-07,store-a.com,Wireless earbuds,https://store-a.com/p/earbuds,49.90,54.90,10.0,in_stock,Price increase
+2026-10-07,store-b.com,Desk lamp LED,https://store-b.com/p/desk-lamp,49.90,44.90,-10.0,in_stock,Price drop
+2026-10-07,store-b.com,Steel bottle 1L,https://store-b.com/p/bottle-1l,15.90,12.90,-18.9,in_stock,Price drop
+2026-10-07,store-c.com,USB-C hub 7-in-1,https://store-c.com/p/usb-c-hub,,32.00,,back_in_stock,Back in stock
+2026-10-07,store-a.com,Yoga mat 6mm,https://store-a.com/p/yoga-mat,18.00,18.00,0.0,in_stock,
+2026-10-07,store-c.com,Phone stand,https://store-c.com/p/phone-stand,9.90,9.90,0.0,low_stock,Low stock
+2026-10-07,store-b.com,Laptop sleeve 14in,https://store-b.com/p/sleeve-14,,24.90,,in_stock,New listing
+2026-10-06,store-a.com,Wireless earbuds,https://store-a.com/p/earbuds,49.90,49.90,0.0,in_stock,
+2026-10-06,store-b.com,Desk lamp LED,https://store-b.com/p/desk-lamp,49.90,49.90,0.0,in_stock,
+2026-10-06,store-c.com,USB-C hub 7-in-1,https://store-c.com/p/usb-c-hub,32.00,,,out_of_stock,Out of stock

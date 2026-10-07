@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cayden Chai | Price monitoring &amp; web scraping</title>
+<meta name="description" content="I build competitor price and stock monitors for online stores, plus web scrapers that deliver clean data to Google Sheets, CSV or your API. Free sample before you pay.">
+<meta property="og:title" content="Cayden Chai | Price monitoring & web scraping">
+<meta property="og:description" content="Know when a competitor changes their price. Daily monitors, clean data, instant alerts. Free sample first.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://caydenportfolio.vercel.app/">
+<meta property="og:image" content="https://caydenportfolio.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#F3F4F1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23FFD23F'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='800' font-size='15' text-anchor='middle' fill='%231A1D21'%3ECC%3C/text%3E%3C/svg%3E">
+<script defer src="/_vercel/insights/script.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F3F4F1; --surface:#FFFFFF; --ink:#1A1D21; --muted:#5E646B; --rule:#D5D8D2;
+  --tag:#FFD23F; --tag-ink:#1A1D21; --drop:#C8102E; --up:#1F7A4D;
+  --maxw:1120px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15181B; --surface:#1D2125; --ink:#ECEEEA; --muted:#A3A9AF; --rule:#30353A;
+    --tag:#FFD23F; --tag-ink:#15181B; --drop:#FF5A6E; --up:#4CC38A;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15181B; --surface:#1D2125; --ink:#ECEEEA; --muted:#A3A9AF; --rule:#30353A;
+  --tag:#FFD23F; --tag-ink:#15181B; --drop:#FF5A6E; --up:#4CC38A;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Archivo",system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--tag);outline-offset:3px;border-radius:2px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.num{font-variant-numeric:tabular-nums}
+
+/* nav */
+header.top{border-bottom:1px solid var(--rule)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.brand{font-weight:700;text-decoration:none;font-stretch:112%;letter-spacing:-.01em}
+.top nav{display:flex;gap:24px;align-items:center;font-size:15px}
+.top nav a{text-decoration:none;color:var(--muted)}
+.top nav a:hover{color:var(--ink)}
+.top nav a.cta-sm{color:var(--tag-ink);background:var(--tag);padding:8px 14px;border-radius:4px;font-weight:600}
+@media (max-width:720px){.top nav a:not(.cta-sm){display:none}}
+
+/* hero */
+.hero{padding:72px 0 80px}
+.hero .wrap{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+@media (max-width:900px){.hero .wrap{grid-template-columns:1fr;gap:40px}.hero{padding:48px 0 56px}}
+h1{font-size:clamp(40px,6vw,68px);line-height:1.02;font-weight:800;font-stretch:118%;letter-spacing:-.025em;margin:0 0 24px}
+.lede{font-size:19px;color:var(--muted);max-width:34em;margin:0 0 32px}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-block;text-decoration:none;font-weight:600;padding:14px 22px;border-radius:4px;border:2px solid var(--ink);font-size:16px}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn.primary:hover{background:transparent;color:var(--ink)}
+.btn.ghost:hover{background:var(--ink);color:var(--bg)}
+.trust{margin-top:28px;font-size:14px;color:var(--muted)}
+
+/* monitor demo */
+.monitor{background:var(--surface);border:1px solid var(--rule);border-radius:8px;position:relative;overflow:hidden}
+.monitor .head{display:flex;justify-content:space-between;align-items:baseline;padding:16px 20px;border-bottom:1px solid var(--rule)}
+.monitor .head strong{font-size:15px}
+.monitor .head span{font-size:13px;color:var(--muted)}
+.monitor table{width:100%;border-collapse:collapse;font-size:15px}
+.monitor th{font-size:13px;font-weight:500;color:var(--muted);text-align:left;padding:10px 20px}
+.monitor td{padding:12px 20px;border-top:1px solid var(--rule)}
+.monitor td.p,.monitor th.p{text-align:right}
+.monitor .site{color:var(--muted);font-size:13px}
+.price{display:inline-block;min-width:5.5ch;text-align:right}
+.was{color:var(--muted);text-decoration:line-through;margin-right:8px;font-size:13px;opacity:0}
+.chg{display:inline-block;font-size:12px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:8px;background:var(--tag);color:var(--tag-ink);opacity:0}
+tr.hit .was,tr.hit .chg{opacity:1}
+tr.hit td{background:color-mix(in srgb,var(--tag) 14%,transparent)}
+tr.hit .price{color:var(--drop);font-weight:700}
+.stock-out{color:var(--drop);font-weight:600}
+.alert{position:absolute;right:16px;bottom:16px;left:16px;will-change:transform,opacity;background:var(--ink);color:var(--bg);border-radius:8px;padding:12px 16px;font-size:14px;line-height:1.45;display:flex;gap:12px;align-items:flex-start;}
+.alert .dot{width:10px;height:10px;border-radius:50%;background:var(--tag);margin-top:6px;flex:none}
+.monitor .foot{height:104px;padding:0;font-size:13px;color:var(--muted);border-top:1px solid var(--rule)}
+@media (prefers-reduced-motion: no-preference){
+  .was,.chg,tr td,.price{transition:background-color .5s ease,color .5s ease,opacity .5s ease}
+}
+tr.hit.up .chg{background:var(--ink);color:var(--bg)}
+tr.hit.up .price,tr.hit.stock .price{color:var(--up)}
+.price{display:inline-block}
+
+@media (max-width:560px){.monitor .foot{height:124px}}
+
+/* sections */
+section{padding:88px 0;border-top:1px solid var(--rule)}
+@media (max-width:720px){section{padding:64px 0}}
+h2{font-size:clamp(28px,3.6vw,40px);line-height:1.1;font-weight:800;font-stretch:112%;letter-spacing:-.02em;margin:0 0 16px;max-width:22ch}
+.sub{color:var(--muted);max-width:40em;margin:0 0 48px}
+
+/* offers as rows */
+.offers{border-top:2px solid var(--ink)}
+.offer{display:grid;grid-template-columns:1fr 1.3fr auto;gap:32px;padding:28px 0;border-bottom:1px solid var(--rule);align-items:start}
+.offer h3{margin:0;font-size:22px;font-weight:700;font-stretch:108%;line-height:1.25}
+.offer p{margin:0;color:var(--muted)}
+.offer ul{margin:10px 0 0;padding-left:18px;color:var(--muted);font-size:15px}
+.offer .from{font-weight:700;white-space:nowrap;text-align:right}
+.offer .from small{display:block;font-weight:400;color:var(--muted);font-size:13px}
+@media (max-width:820px){.offer{grid-template-columns:1fr;gap:10px}.offer .from{text-align:left}}
+
+/* process */
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;counter-reset:s}
+.steps li{counter-increment:s;border-top:2px solid var(--rule);padding-top:16px;position:relative}
+.steps .bar{position:absolute;left:0;right:0;top:-2px;height:2px;background:var(--ink);transform-origin:left}
+.steps li::before{content:counter(s);display:inline-grid;place-items:center;width:30px;height:30px;border-radius:4px;background:var(--tag);color:var(--tag-ink);font-weight:800;margin-bottom:12px}
+.steps h3{margin:0 0 6px;font-size:18px;font-weight:700}
+.steps p{margin:0;color:var(--muted);font-size:15px}
+@media (max-width:900px){.steps{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.steps{grid-template-columns:1fr}}
+
+/* demo video */
+.demo{width:100%;height:auto;border-radius:8px;border:1px solid var(--rule);background:#000;display:block}
+
+/* proof */
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+@media (max-width:900px){.cases{grid-template-columns:1fr}}
+.case{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:28px}
+.case.lead{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr;gap:32px;align-items:center}
+@media (max-width:900px){.case.lead{grid-template-columns:1fr;gap:8px}}
+.case h3{margin:0 0 8px;font-size:21px;font-weight:700;font-stretch:108%;line-height:1.25}
+.case p{margin:0 0 16px;color:var(--muted)}
+.facts{display:flex;flex-wrap:wrap;gap:28px;margin:20px 0 0}
+.facts div{font-size:13px;color:var(--muted)}
+.facts b{display:block;font-size:28px;color:var(--ink);font-weight:800;font-stretch:112%;line-height:1.1}
+.stack{font-size:14px;color:var(--muted);margin:0}
+.case img{width:100%;height:auto;border-radius:6px;border:1px solid var(--rule);display:block}
+.also{margin-top:40px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.also div{border-top:1px solid var(--rule);padding-top:14px;font-size:15px;color:var(--muted)}
+.also b{display:block;color:var(--ink);font-size:16px}
+@media (max-width:820px){.also{grid-template-columns:1fr}}
+
+/* pricing */
+.prices{width:100%;border-collapse:collapse;font-size:16px}
+.prices th,.prices td{text-align:left;padding:16px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+.prices thead th{font-size:14px;color:var(--muted);font-weight:500;border-bottom:2px solid var(--ink)}
+.prices td:first-child{font-weight:700;width:28%}
+.prices td.amt{font-weight:700;white-space:nowrap;text-align:right}
+.prices td small{color:var(--muted);font-weight:400}
+.note{font-size:14px;color:var(--muted);margin-top:20px;max-width:46em}
+@media (max-width:640px){.prices thead{display:none}.prices tr{display:grid;grid-template-columns:1fr auto;border-bottom:1px solid var(--rule);padding:12px 0}.prices td{border:0;padding:4px 0}.prices td:first-child{width:auto}.prices td:nth-child(2){grid-column:1/-1;order:3;color:var(--muted)}}
+
+/* about */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:56px}
+@media (max-width:900px){.about{grid-template-columns:1fr;gap:32px}}
+.about p{margin:0 0 16px}
+.creds{list-style:none;margin:0;padding:0}
+.creds li{padding:14px 0;border-bottom:1px solid var(--rule);display:flex;justify-content:space-between;gap:16px}
+.creds li span{color:var(--muted);font-size:14px;text-align:right}
+
+/* faq */
+.faq details{border-bottom:1px solid var(--rule);padding:18px 0}
+.faq summary{cursor:pointer;font-weight:600;font-size:18px;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-weight:400;font-size:22px;line-height:1}
+.faq details[open] summary::after{content:"\2212"}
+.faq details p{margin:12px 0 0;color:var(--muted);max-width:44em}
+
+/* contact */
+.contact{background:var(--ink);color:var(--bg);border-top:0}
+.contact h2{color:var(--bg)}
+.contact .sub{color:color-mix(in srgb,var(--bg) 72%,transparent)}
+.contact .btn.primary{background:var(--tag);color:var(--tag-ink);border-color:var(--tag)}
+.contact .btn.primary:hover{background:transparent;color:var(--tag)}
+.contact .btn.ghost{border-color:var(--bg);color:var(--bg)}
+.contact .btn.ghost:hover{background:var(--bg);color:var(--ink)}
+.links{display:flex;flex-wrap:wrap;gap:24px;margin-top:40px;font-size:15px}
+.links a{color:color-mix(in srgb,var(--bg) 80%,transparent)}
+footer{background:var(--ink);color:color-mix(in srgb,var(--bg) 60%,transparent);font-size:13px;padding:24px 0 40px}
+
+/* ---------- sticky notes ---------- */
+.note-p{--paper:#FFF3A3;--line:#E8D86A;position:relative;font-family:"Kalam",cursive;color:#2A2A2A;background:var(--paper);padding:26px 20px 22px;font-size:20px;line-height:1.35;box-shadow:0 1px 1px rgba(0,0,0,.08),0 10px 18px -12px rgba(0,0,0,.35);transform:rotate(var(--r,0deg))}
+.note-p.lined{background-image:repeating-linear-gradient(to bottom,transparent 0 27px,var(--line) 27px 28px);background-position:0 18px}
+.note-p.grid{--paper:#F7F5F0;background-image:linear-gradient(#DCD6CC 1px,transparent 1px),linear-gradient(90deg,#DCD6CC 1px,transparent 1px);background-size:14px 14px}
+.note-p.pink{--paper:#F8B9B9;--line:#E89A9A}
+.note-p.green{--paper:#CFE6C4}
+.note-p.blue{--paper:#CDE0EE}
+.note-p.grey{--paper:#D7D3CE}
+.note-p.white{--paper:#FBFBFA;--line:#B9D3EA}
+.note-p.torn{clip-path:polygon(0 4%,8% 0,18% 3%,30% 0,44% 4%,58% 1%,70% 4%,84% 0,100% 3%,98% 30%,100% 58%,97% 82%,100% 100%,82% 97%,66% 100%,50% 96%,34% 100%,18% 97%,0 100%,2% 70%,0 44%,3% 20%)}
+/* tape */
+.note-p .tape{position:absolute;top:-11px;left:50%;width:84px;height:24px;margin-left:-42px;background:rgba(120,190,200,.55);transform:rotate(-3deg);box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.note-p .tape.pinkt{background:rgba(232,120,140,.55)}
+.note-p .tape.l{left:14px;margin:0;width:56px;transform:rotate(-38deg);top:-6px}
+.note-p .tape.r{left:auto;right:14px;margin:0;width:56px;transform:rotate(38deg);top:-6px}
+.note-p .tape.grey{background:rgba(190,180,160,.6)}
+/* pin */
+.note-p .pin{position:absolute;top:-8px;right:22px;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#7FE0C8,#139C7E 60%,#0B6E58);box-shadow:2px 4px 4px rgba(0,0,0,.3)}
+/* binder clip + paper clip */
+.note-p .clip{position:absolute;top:-14px;right:26px;width:22px;height:30px;border:3px solid #9AA3AA;border-radius:11px;border-bottom-color:transparent}
+.note-p .binder{position:absolute;top:-12px;right:26px;width:26px;height:16px;background:#1D1F22;border-radius:3px 3px 0 0}
+.note-p .binder::before{content:"";position:absolute;left:4px;right:4px;top:-10px;height:12px;border:2px solid #555;border-bottom:0;border-radius:8px 8px 0 0}
+.note-p .holes{position:absolute;top:8px;left:12px;right:12px;height:6px;background:radial-gradient(circle,var(--bg) 2.5px,transparent 3px) 0 0/16px 6px repeat-x}
+/* curl */
+.note-p.curl::after{content:"";position:absolute;right:0;bottom:0;width:34px;height:34px;background:linear-gradient(135deg,rgba(0,0,0,.12),rgba(255,255,255,.6) 50%,var(--bg) 51%)}
+.note-p s{text-decoration-thickness:2px}
+
+/* hero notes */
+.monitor-wrap{position:relative;margin-top:64px}
+.hero-note{position:absolute;z-index:3;width:200px;font-size:18px;padding:22px 16px 16px}
+.hero-note.n1{left:-6px;top:-92px;--r:-5deg;width:200px}
+.hero-note.n2{right:-18px;top:-80px;--r:5deg;width:160px;opacity:0}
+.hero-note .todo{transition:color .4s}
+.hero-note.done .todo{text-decoration:line-through;text-decoration-thickness:2px;color:#777}
+@media (max-width:1180px){.hero-note.n1{left:-12px}}
+@media (max-width:900px){.hero-note.n1{left:auto;right:8px;top:-70px;width:180px;font-size:16px}.hero-note.n2{display:none}.monitor-wrap{margin-top:72px}}
+
+/* problem wall */
+.wall{display:grid;grid-template-columns:repeat(3,1fr);gap:40px 32px;margin:8px 0 40px;padding:20px 8px}
+@media (max-width:860px){.wall{grid-template-columns:repeat(2,1fr);gap:32px 18px}}
+@media (max-width:480px){.wall{grid-template-columns:1fr 1fr;gap:28px 12px}.wall .note-p{font-size:16px;padding:22px 12px 16px}}
+.wall .note-p{min-height:150px;cursor:pointer;border:0;text-align:left;width:100%;display:block}
+.wall .note-p:hover{transform:rotate(var(--r,0deg)) translateY(-4px)}
+.wall .note-p:focus-visible{outline:3px solid var(--ink);outline-offset:4px}
+.wall .stamp{position:absolute;right:10px;bottom:10px;font-family:"Archivo",sans-serif;font-weight:800;font-stretch:115%;font-size:13px;letter-spacing:.02em;color:var(--drop);border:2px solid var(--drop);padding:2px 8px;border-radius:3px;transform:rotate(-8deg) scale(1.6);opacity:0;background:rgba(255,255,255,.55)}
+.wall .note-p[aria-pressed="true"] .txt{text-decoration:line-through;text-decoration-thickness:2px;color:#6b6b6b}
+.wall .note-p[aria-pressed="true"] .stamp{opacity:1;transform:rotate(-8deg) scale(1);transition:transform .25s cubic-bezier(.2,1.6,.4,1),opacity .15s}
+.wall-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;border-top:2px solid var(--ink);padding-top:24px}
+.wall-foot p{margin:0;font-size:19px;max-width:34em}
+.wall-foot .count{font-weight:700}
+
+/* for / not for */
+.fit{display:grid;grid-template-columns:1fr 1fr;gap:48px}
+@media (max-width:820px){.fit{grid-template-columns:1fr;gap:40px}}
+.fit h3{font-size:20px;margin:0 0 20px;font-weight:700}
+.fit .stack-notes{display:grid;gap:22px}
+.fit .note-p{font-size:20px;padding:22px 20px 18px;max-width:320px;min-height:96px}
+.fit .note-p:nth-child(2){margin-left:56px}
+.fit .note-p:nth-child(3){margin-left:18px}
+@media (max-width:480px){.fit .note-p:nth-child(2){margin-left:24px}}
+
+/* pricing + about extras */
+.price-wrap{position:relative}
+.price-note{position:absolute;right:-18px;top:-118px;width:190px;--r:4deg;font-size:19px;z-index:2}
+@media (max-width:900px){.price-note{position:relative;right:auto;top:auto;margin:0 0 28px auto;display:block}}
+.polaroid{background:#fff;padding:12px 12px 44px;box-shadow:0 10px 24px -14px rgba(0,0,0,.45);transform:rotate(-2.5deg);width:min(260px,70vw);position:relative;margin:8px 0 36px}
+.polaroid .ph{aspect-ratio:1/1;background:#E4E6E1;display:grid;place-items:center;overflow:hidden}
+.polaroid .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.polaroid .ph span{font:800 64px/1 "Archivo",sans-serif;font-stretch:120%;color:#B5BAB2}
+.polaroid figcaption{position:absolute;left:0;right:0;bottom:10px;text-align:center;font-family:"Kalam",cursive;font-size:19px;color:#333}
+.polaroid .tape{position:absolute;top:-11px;left:50%;width:90px;height:24px;margin-left:-45px;background:rgba(190,180,160,.6);transform:rotate(2deg)}
+.reply-note{width:170px;--r:5deg;font-size:18px;position:absolute;left:200px;top:150px}
+@media (max-width:560px){.reply-note{left:auto;right:0;top:120px;width:150px}}
+.about-left{position:relative}
+
+/* contact form */
+.contact-grid{display:grid;grid-template-columns:minmax(0,760px) 1fr;gap:56px;align-items:start}
+@media (max-width:980px){.contact-grid{grid-template-columns:1fr;gap:32px}}
+.tip-note{max-width:250px;--r:3deg;font-size:20px;margin-top:40px}
+.cform{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:760px;margin-top:8px}
+.cform label{display:block;font-size:14px;margin-bottom:6px;color:color-mix(in srgb,var(--bg) 78%,transparent)}
+.cform .full{grid-column:1/-1}
+.cform input,.cform textarea{width:100%;font:inherit;font-size:16px;padding:12px 14px;border-radius:4px;border:1px solid color-mix(in srgb,var(--bg) 35%,transparent);background:color-mix(in srgb,var(--bg) 8%,transparent);color:var(--bg)}
+.cform textarea{min-height:96px;resize:vertical}
+.cform input:focus,.cform textarea:focus{outline:3px solid var(--tag);outline-offset:1px}
+.cform .row-actions{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.reassure{font-size:14px;color:color-mix(in srgb,var(--bg) 70%,transparent);margin:0}
+@media (max-width:640px){.cform{grid-template-columns:1fr}}
+.copy{font:inherit;font-size:15px;background:none;border:0;color:var(--tag);cursor:pointer;text-decoration:underline;padding:0}
+.btn small{display:block;font-weight:400;font-size:12px;opacity:.8;margin-top:2px}
+
+/* v4 additions */
+.from-chip{display:inline-block;background:var(--tag);color:var(--tag-ink);font-weight:600;font-size:14px;padding:6px 12px;border-radius:4px;margin:0 0 18px;transform:rotate(-1deg)}
+.from-chip[hidden]{display:none}
+.trust a{color:var(--ink);font-weight:600}
+.guarantee{margin:28px 0 0;padding:16px 20px;border-left:4px solid var(--tag);background:var(--surface);max-width:46em}
+@media (max-width:900px){
+  .hero .wrap{display:flex;flex-direction:column;gap:0}
+  .hero-copy{display:contents}
+  .hero-copy .from-chip{order:0;align-self:flex-start}
+  .hero h1{order:1}
+  .hero .lede{order:2;margin-bottom:8px}
+  .monitor-wrap{order:3;margin:84px 0 28px}
+  .hero .actions{order:4}
+  .hero .trust{order:5}
+  tr.m-hide{display:none}
+  .monitor .head span{display:none}
+  .hero-note.n1{top:-74px;right:4px;width:168px;font-size:15px;padding:20px 12px 12px}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">Cayden Chai</a>
+    <nav aria-label="Main">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a class="cta-sm" href="#contact">Get a free sample</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <p class="from-chip" id="fromChip" hidden></p>
+      <h1>Know when a competitor changes their price.</h1>
+      <p class="lede">I track your competitors' prices and stock every day and send you an alert the moment something changes. You see a free sample before you pay.</p>
+      <div class="actions">
+        <a class="btn primary" href="#contact">Get a free 25-row sample<small>Pay nothing until you've seen your data</small></a>
+        <a class="btn ghost" href="#pricing">See pricing</a>
+      </div>
+      <p class="trust">Based in Singapore. Replies within 24 hours. Public data only.<br><a href="example-report.csv" download>Download an example report (CSV)</a></p>
+    </div>
+
+    <div class="monitor-wrap">
+    <div class="note-p lined hero-note n1" id="heroNote" aria-hidden="true"><span class="tape"></span><span class="todo">Mon: check competitor prices&hellip; again</span></div>
+    <div class="note-p green hero-note n2" id="heroNote2" aria-hidden="true"><span class="pin"></span>Now automatic. Coffee instead.</div>
+    <div class="monitor" aria-label="Example competitor price monitor">
+      <div class="head"><strong>Competitor prices</strong><span id="checked">Example data</span></div>
+      <table>
+        <thead><tr><th>Product</th><th class="p">Price</th></tr></thead>
+        <tbody class="num" id="rows">
+          <tr><td>Wireless earbuds<div class="site">store-a.com</div></td><td class="p"><span class="was"></span><span class="price">$49.90</span><span class="chg"></span></td></tr>
+          <tr><td>Desk lamp LED<div class="site">store-b.com</div></td><td class="p"><span class="was"></span><span class="price">$49.90</span><span class="chg"></span></td></tr>
+          <tr class="m-hide"><td>Yoga mat 6mm<div class="site">store-a.com</div></td><td class="p"><span class="was"></span><span class="price">$18.00</span><span class="chg"></span></td></tr>
+          <tr><td>USB-C hub 7-in-1<div class="site">store-c.com</div></td><td class="p"><span class="was"></span><span class="price stock-out">Out of stock</span><span class="chg"></span></td></tr>
+          <tr class="m-hide"><td>Steel bottle 1L<div class="site">store-b.com</div></td><td class="p"><span class="was"></span><span class="price">$15.90</span><span class="chg"></span></td></tr>
+        </tbody>
+      </table>
+      <div class="foot" aria-hidden="true"></div>
+      <div class="alert" id="alert" role="status" aria-live="polite">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="alertText"><b>Price drop on store-b.com</b><br>Desk lamp LED: $49.90 to $44.90 (&minus;10%)</span>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<section id="problem">
+  <div class="wrap">
+    <h2>Does your week look like this?</h2>
+    <p class="sub">Tap the jobs you're tired of doing by hand.</p>
+    <div class="wall" id="wall">
+      <button class="note-p lined" style="--r:-3deg" aria-pressed="false"><span class="tape"></span><span class="txt">Check 40 competitor pages. Every. Monday.</span><span class="stamp">Automated</span></button>
+      <button class="note-p grid" style="--r:2deg" aria-pressed="false"><span class="binder"></span><span class="txt">Copy their prices into Excel (again)</span><span class="stamp">Automated</span></button>
+      <button class="note-p pink lined" style="--r:-1.5deg" aria-pressed="false"><span class="tape l"></span><span class="tape r"></span><span class="txt">They ran a 20% sale and we found out from a customer</span><span class="stamp">Automated</span></button>
+      <button class="note-p green curl" style="--r:2.5deg" aria-pressed="false"><span class="pin"></span><span class="txt">Is our price still the lowest? No idea.</span><span class="stamp">Automated</span></button>
+      <button class="note-p grey torn" style="--r:-2deg" aria-pressed="false"><span class="tape grey"></span><span class="txt">Who's out of stock? Could be selling more right now</span><span class="stamp">Automated</span></button>
+      <button class="note-p blue" style="--r:1.5deg" aria-pressed="false"><span class="clip"></span><span class="holes"></span><span class="txt">New listings from rivals? Check&hellip; sometime</span><span class="stamp">Automated</span></button>
+    </div>
+    <div class="wall-foot">
+      <p><span class="count" id="wallCount">0 of 6</span> automated. I turn this list into one daily alert on your phone.</p>
+      <a class="btn primary" href="#contact">Automate my list</a>
+    </div>
+  </div>
+</section>
+
+<section id="fit">
+  <div class="wrap">
+    <h2>Is this a fit?</h2>
+    <div class="fit">
+      <div>
+        <h3>A good fit if you</h3>
+        <div class="stack-notes">
+          <div class="note-p green" style="--r:-1deg"><span class="tape"></span>Sell online and watch a handful of competitors</div>
+          <div class="note-p green lined" style="--r:1.2deg">Copy data from websites into sheets every week</div>
+          <div class="note-p green" style="--r:-.8deg"><span class="pin"></span>Want alerts, not another dashboard to check</div>
+        </div>
+      </div>
+      <div>
+        <h3>Not a fit if you need</h3>
+        <div class="stack-notes">
+          <div class="note-p pink" style="--r:1deg"><span class="tape pinkt"></span>Data from behind a login, or personal details</div>
+          <div class="note-p pink lined" style="--r:-1.2deg">Every site on the internet, scraped by tonight</div>
+          <div class="note-p pink" style="--r:.8deg"><span class="pin"></span>CAPTCHAs or paywalls bypassed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="services">
+  <div class="wrap">
+    <h2>What I build</h2>
+    <p class="sub">Fixed price. You own the code and the data.</p>
+    <div class="offers">
+      <div class="offer">
+        <h3>Price &amp; stock monitor</h3>
+        <div>
+          <p>Track competitor products daily. Get an alert when prices, stock or listings change.</p>
+          <ul><li>Alerts on Telegram, Slack or email</li><li>Full price history in a Google Sheet</li></ul>
+        </div>
+        <div class="from num">From $50<small>setup</small></div>
+      </div>
+      <div class="offer">
+        <h3>Custom web scraper</h3>
+        <div>
+          <p>Pull data from a public website into Google Sheets, CSV or your API.</p>
+          <ul><li>Every row checked before delivery</li><li>One-off or on a schedule</li></ul>
+        </div>
+        <div class="from num">From $45<small>one site</small></div>
+      </div>
+      <div class="offer">
+        <h3>Care plan</h3>
+        <div>
+          <p>Websites change. I keep your monitor running and fix it within 48 hours.</p>
+          <ul><li>Daily health check</li><li>Alert if a run ever fails</li></ul>
+        </div>
+        <div class="from num">$99<small>per month</small></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="sub">You see it working before you pay.</p>
+    <ol class="steps">
+      <li><span class="bar" aria-hidden="true"></span><h3>Send the sites</h3><p>Which websites, which fields, how often.</p></li>
+      <li><span class="bar" aria-hidden="true"></span><h3>Get a free sample</h3><p>Up to 25 real rows within 24 hours.</p></li>
+      <li><span class="bar" aria-hidden="true"></span><h3>Approve a fixed price</h3><p>One quote, one delivery date.</p></li>
+      <li><span class="bar" aria-hidden="true"></span><h3>Get data and alerts</h3><p>Daily runs, checked data, instant alerts.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- DEMO VIDEO: record the 60s demo (script in freelance-scale-playbook.md), save it as demo.mp4
+     (1080p, under 15 MB) next to this file, then delete the word "hidden" below. -->
+<section id="demo" hidden>
+  <div class="wrap">
+    <h2>See it work in 60 seconds</h2>
+    <p class="sub">A real monitor: the daily scan, the clean data, and the alert.</p>
+    <video class="demo" src="demo.mp4" poster="scanner-report.jpg" controls playsinline preload="none"></video>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <h2>Work that's running today</h2>
+    <div class="cases">
+      <article class="case lead">
+        <img src="scanner-report.jpg" width="1280" height="769" alt="The scanner's daily report: confirmed gaps and early signals, generated automatically each morning">
+        <div>
+        <h3>Daily marketplace scanner</h3>
+        <p>Checks 5,000 public listings every day, compares them with 75 days of history, and sends a Telegram alert only when something real changes.</p>
+        <div class="facts num">
+          <div><b data-count="5000">5,000</b>listings checked daily</div>
+          <div><b data-count="75" data-suffix=" days">75 days</b>of history compared</div>
+          <div><b data-count="17">17</b>automated tests</div>
+        </div>
+        <p class="stack" style="margin-top:20px">Node.js, GitHub Actions, Telegram</p>
+        </div>
+      </article>
+      <article class="case">
+        <h3>Deal-sourcing tool for a VC network</h3>
+        <p>Finds new startups daily, scores them and drafts outreach for LvlUp Ventures. It replaced manual browsing with a ranked daily list.</p>
+        <p class="stack">Python, GraphQL, Apollo.io, Claude API</p>
+      </article>
+      <article class="case">
+        <h3>AI customer pipeline, Echelon 2026 award</h3>
+        <p>Turns a watch brand's customer data into segments and insights. Won Promising AI Workflow Builder at Echelon Singapore 2026.</p>
+        <p class="stack">Python, LLM agents, HuggingFace</p>
+      </article>
+    </div>
+    <div class="also">
+      <div><b>EMBARK</b>Competition platform for a 2,100-student school. <a href="https://embark-np.vercel.app" rel="noopener">embark-np.vercel.app</a></div>
+      <div><b>Lock-in</b>Focus app with a Chrome extension, backed by a S$3,000 grant. <a href="https://lockinme.com" rel="noopener">lockinme.com</a></div>
+      <div><b>24/7 data collector</b>Always-on API collector on a Linux server with budget guards.</div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <h2>Simple, fixed pricing</h2>
+    <p class="sub">In USD. Bigger jobs get a quote after the free sample.</p>
+    <div class="price-wrap">
+    <div class="note-p lined price-note" aria-hidden="true"><span class="tape"></span>Free sample first. Always.</div>
+    <table class="prices num">
+      <thead><tr><th>Package</th><th>What's included</th><th style="text-align:right">Price</th></tr></thead>
+      <tbody>
+        <tr><td>Quick extract</td><td>1 site, up to 500 rows, one-time CSV or Google Sheet</td><td class="amt">$45</td></tr>
+        <tr><td>Re-runnable scraper</td><td>1 site, up to 10,000 rows, plus a weekly scheduled run</td><td class="amt">$120</td></tr>
+        <tr><td>Automated pipeline</td><td>Up to 3 sites, daily runs, change alerts</td><td class="amt">$300</td></tr>
+        <tr><td>Price &amp; stock monitor</td><td>Daily checks on your chosen competitor pages, with alerts</td><td class="amt">from $50</td></tr>
+        <tr><td>Care plan</td><td>Up to 10 pages, daily health check, fixes within 48 hours</td><td class="amt">$99/mo</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="guarantee"><b>30-day fix guarantee.</b> If anything I build breaks in the first 30 days, I fix it free.</p>
+    <p class="note">Prefer platform payment protection? Hire me on <a href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Upwork</a> or <a href="https://www.fiverr.com/n1njla" rel="noopener">Fiverr</a>.</p>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about">
+    <div class="about-left">
+      <figure class="polaroid"><span class="tape"></span><div class="ph"><img src="cayden.jpg" alt="Cayden Chai" onerror="this.remove()"><span aria-hidden="true">CC</span></div><figcaption>Cayden, Singapore</figcaption></figure>
+      <div class="note-p lined reply-note" aria-hidden="true"><span class="pin"></span>I reply within 24h (GMT+8)</div>
+      <h2>Hi, I'm Cayden</h2>
+      <p>I'm a developer in Singapore. I build scrapers like production software: scheduled, tested and watched, so your data never quietly goes wrong.</p>
+      <p>I've also sold face to face to business owners, so I focus on what the data is for, not just how to collect it.</p>
+    </div>
+    <ul class="creds">
+      <li>Anthropic certified<span>Building with the Claude API</span></li>
+      <li>Echelon Singapore 2026<span>Promising AI Workflow Builder</span></li>
+      <li>Harvard Business School<span>Mentee, 1 of 18 selected</span></li>
+      <li>LvlUp Ventures<span>Venture Scout</span></li>
+      <li>Jakarta International Hackathon<span>1st place</span></li>
+      <li>Languages<span>English, Mandarin</span></li>
+    </ul>
+  </div>
+</section>
+
+<section id="faq" class="faq">
+  <div class="wrap">
+    <h2>Questions clients ask</h2>
+    <details><summary>Is this legal?</summary><p>I only collect public data. No logins, no bypassing CAPTCHAs or paywalls, and no personal data.</p></details>
+    <details><summary>What if the website changes?</summary><p>You get an alert instead of bad data. In the first 30 days, fixes are free. After that, the care plan covers it.</p></details>
+    <details><summary>Which sites can you track?</summary><p>Most public online stores and marketplaces, including Shopify. Send a link and I'll confirm with a free sample.</p></details>
+    <details><summary>What format do I get?</summary><p>Google Sheets, CSV, Excel, JSON or your API. Alerts on Telegram, Slack or email.</p></details>
+    <details><summary>How fast is it?</summary><p>The sample comes within 24 hours. Most projects take 2 to 4 days.</p></details>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <h2>Get a free sample</h2>
+    <p class="sub">Tell me the site and what you want to know. I'll reply within 24 hours with up to 25 real rows.</p>
+    <div class="contact-grid">
+    <form class="cform" id="cform" novalidate>
+      <div><label for="f-site">Website(s) to track</label><input id="f-site" name="fi-text-websites" required placeholder="competitor-store.com"></div>
+      <div><label for="f-email">Your email</label><input id="f-email" name="fi-sender-email" type="email" required autocomplete="email" placeholder="you@yourstore.com"></div>
+      <div class="full"><label for="f-what">What do you want to know?</label><textarea id="f-what" name="fi-text-request" required placeholder="Prices and stock for 20 products, checked daily, sent to Google Sheets"></textarea></div>
+      <input type="hidden" name="fi-text-source" id="f-source" value="direct">
+      <div class="row-actions">
+        <button class="btn primary" type="submit" id="f-submit">Send my sample request</button>
+        <a class="btn ghost" href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Hire me on Upwork</a>
+        <p class="reassure" id="f-status" role="status" aria-live="polite">Free, no payment details. You get up to 25 real rows within 24 hours.</p>
+      </div>
+    </form>
+    <div class="note-p lined tip-note" aria-hidden="true"><span class="tape"></span>Tip: paste 2 or 3 product links. I'll start the sample with those.</div>
+    </div>
+    <div class="links">
+      <a href="https://www.fiverr.com/n1njla" rel="noopener">Fiverr</a>
+      <a href="https://www.linkedin.com/in/cayden-chai-ming-yang" rel="noopener">LinkedIn</a>
+      <span>caydencmy@gmail.com <button class="copy" type="button" id="copyEmail">Copy</button></span>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer><div class="wrap">&copy; 2026 Cayden Chai. Singapore.</div></footer>
+
+<script src="motion.js"></script>
+<script>
+(function(){
+  var M=window.Motion, reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rows=[].slice.call(document.querySelectorAll('#rows tr'));
+  var alertEl=document.getElementById('alert'), alertText=document.getElementById('alertText'), checked=document.getElementById('checked');
+  var base=['$49.90','$49.90','$18.00','Out of stock','$15.90'];
+  var events=[
+    {i:1,kind:'drop',from:'$49.90',to:'$44.90',tag:'−10%',title:'Price drop on store-b.com',body:'Desk lamp LED: $49.90 to $44.90 (−10%)'},
+    {i:3,kind:'stock',from:'',to:'$32.00',tag:'In stock',title:'Back in stock on store-c.com',body:'USB-C hub 7-in-1 is available again at $32.00'},
+    {i:0,kind:'up',from:'$49.90',to:'$54.90',tag:'+10%',title:'Price increase on store-a.com',body:'Wireless earbuds: $49.90 to $54.90 (+10%). You are now the cheaper option.'},
+    {i:4,kind:'drop',from:'$15.90',to:'$12.90',tag:'−19%',title:'Price drop on store-b.com',body:'Steel bottle 1L: $15.90 to $12.90 (−19%)'}
+  ];
+  function reset(){rows.forEach(function(r,k){r.className='';r.querySelector('.was').textContent='';r.querySelector('.chg').textContent='';var p=r.querySelector('.price');p.textContent=base[k];p.className='price'+(k===3?' stock-out':'');});}
+  function apply(e){
+    reset(); var r=rows[e.i];
+    r.className='hit '+e.kind;
+    r.querySelector('.was').textContent=e.from;
+    var p=r.querySelector('.price'); p.textContent=e.to; p.className='price';
+    r.querySelector('.chg').textContent=e.tag;
+    alertText.innerHTML='<b>'+e.title+'</b><br>'+e.body;
+  }
+  var hn=document.getElementById('heroNote'), hn2=document.getElementById('heroNote2');
+  if(!M||reduce){apply(events[0]);hn.classList.add('done');hn2.style.opacity=1;return;}
+
+  var n=0, secs=0;
+  M.animate(alertEl,{opacity:0,y:24},{duration:0});
+  function step(){
+    var e=events[n%events.length]; n++; var guard=0;
+    while(rows[e.i].offsetParent===null && guard++<events.length){e=events[n%events.length]; n++;}
+    M.animate(alertEl,{opacity:0,y:24},{duration:.25}).then(function(){
+      apply(e); secs=0;
+      M.animate(rows[e.i].querySelector('.price'),{scale:[1.18,1]},{duration:.5,ease:[.2,.8,.2,1]});
+      M.animate(alertEl,{opacity:1,y:0},{duration:.5,delay:.35,ease:[.2,.8,.2,1]});
+      if(!hn.classList.contains('done')){hn.classList.add('done');
+        M.animate(hn2,{opacity:[0,1],scale:[1.15,1],rotate:[12,5]},{duration:.45,delay:.9,ease:[.2,1.4,.4,1]});}
+    });
+  }
+  function tick(){secs++;checked.textContent='Example data, checked '+secs+'s ago';}
+  M.inView('.monitor',function(){
+    step(); var a=setInterval(step,4200), b=setInterval(tick,1000);
+    return function(){clearInterval(a);clearInterval(b);};
+  },{amount:.4});
+
+  // count-up stats
+  M.inView('.facts',function(entry){
+    var el=entry.target||entry;
+    el.querySelectorAll('[data-count]').forEach(function(b){
+      var to=+b.dataset.count, suf=b.dataset.suffix||'';
+      M.animate(0,to,{duration:1.4,ease:[.2,.8,.2,1],onUpdate:function(v){b.textContent=Math.round(v).toLocaleString('en-US')+suf;}});
+    });
+  },{amount:.6});
+
+  // sticky-note wall drops in once
+  var notes=document.querySelectorAll('#wall .note-p');
+  notes.forEach(function(n){n.style.opacity=0;});
+  M.inView('#wall',function(){
+    notes.forEach(function(n,k){M.animate(n,{opacity:[0,1],y:[-40,0],rotate:[k%2?-12:12,parseFloat(n.style.getPropertyValue('--r'))||0]},{duration:.55,delay:k*.09,ease:[.2,1.25,.4,1]}).then(function(){n.style.transform='';});});
+  },{amount:.25});
+
+  // process steps fill in order as you scroll through them
+  var bars=[].slice.call(document.querySelectorAll('.steps .bar'));
+  bars.forEach(function(b){b.style.transform='scaleX(0)';});
+  M.scroll(function(p){
+    bars.forEach(function(b,k){var v=Math.max(0,Math.min(1,p*bars.length*1.25-k));b.style.transform='scaleX('+v+')';});
+  },{target:document.querySelector('.steps'),offset:['start 85%','end 55%']});
+})();
+</script>
+
+<script>
+(function(){
+  // tap a note to "automate" it
+  var wall=document.querySelectorAll('#wall .note-p'), count=document.getElementById('wallCount');
+  function upd(){var d=0;wall.forEach(function(n){if(n.getAttribute('aria-pressed')==='true')d++;});count.textContent=d+' of '+wall.length;}
+  wall.forEach(function(n){n.addEventListener('click',function(){n.setAttribute('aria-pressed',n.getAttribute('aria-pressed')==='true'?'false':'true');upd();});});
+  // source-matched greeting + hidden source field (?from=upwork|fiverr|email|linkedin)
+  var src=(new URLSearchParams(location.search).get('from')||'').toLowerCase();
+  var greet={upwork:'Here from Upwork? Same offer, same free sample.',fiverr:'Here from Fiverr? Same offer, same free sample.',email:'Thanks for clicking through from my email.',linkedin:'Hi from LinkedIn. The free sample offer stands.'};
+  if(greet[src]){var chip=document.getElementById('fromChip');chip.textContent=greet[src];chip.hidden=false;}
+  document.getElementById('f-source').value=src||(document.referrer?new URL(document.referrer).hostname:'direct');
+  // contact form -> Forminit
+  var f=document.getElementById('cform'), st=document.getElementById('f-status'), btn=document.getElementById('f-submit');
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(!f.checkValidity()){f.reportValidity();return;}
+    btn.disabled=true; btn.textContent='Sending...';
+    fetch('https://forminit.com/f/h4q7wei2w65',{method:'POST',body:new FormData(f),headers:{Accept:'application/json'}})
+      .then(function(r){if(!r.ok)throw new Error(r.status);
+        st.textContent='Got it. I\'ll reply to '+f.elements['fi-sender-email'].value+' within 24 hours with your sample.';
+        btn.textContent='Request sent'; f.reset();
+        if(window.va)window.va('event',{name:'sample_request',data:{source:src||'direct'}});})
+      .catch(function(){btn.disabled=false;btn.textContent='Send my sample request';
+        st.innerHTML='That didn\'t send. Please email <b>caydencmy@gmail.com</b> instead.';});
+  });
+  var c=document.getElementById('copyEmail');
+  c.addEventListener('click',function(){navigator.clipboard&&navigator.clipboard.writeText('caydencmy@gmail.com').then(function(){c.textContent='Copied';setTimeout(function(){c.textContent='Copy';},1800);});});
+})();
+</script>
+</body>
+</html>
