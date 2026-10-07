@@ -451,6 +451,55 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
 .price-side ul.ticks{list-style:none;margin:0 0 24px;padding:0}
 .price-side ul.ticks li{padding:12px 0 12px 32px;border-bottom:1px solid var(--rule);position:relative}
 .price-side ul.ticks li::before{content:"";position:absolute;left:4px;top:17px;width:12px;height:7px;border-left:3px solid var(--up);border-bottom:3px solid var(--up);transform:rotate(-45deg)}
+
+/* ================= v6: plans, calculator, currency, anything-else ================= */
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.sec-head .sub{margin-bottom:32px}
+.cur{display:inline-flex;border:2px solid var(--ink);border-radius:999px;padding:3px;gap:2px;margin-bottom:32px;background:var(--surface)}
+.cur button{font:inherit;font-size:13px;font-weight:700;letter-spacing:.04em;border:0;background:none;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
+.cur button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.tag .pop{display:inline-block;margin:0 0 8px;background:#1A1D21;color:#FFD23F;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 9px;border-radius:3px;align-self:flex-start}
+.tag .amt small .money{font-size:inherit}
+.tag-cta{display:block;margin-top:16px;text-align:center;background:#1A1D21;color:#FFD23F;text-decoration:none;font-weight:700;padding:11px 12px;border-radius:4px;border:2px solid #1A1D21}
+.tag-cta:hover{background:transparent;color:#1A1D21}
+.tag-cta:focus-visible{outline:3px solid #1A1D21;outline-offset:2px}
+
+.calc{margin-top:64px;display:grid;grid-template-columns:1.2fr 1fr;background:var(--surface);border:1px solid var(--rule);border-radius:10px;overflow:hidden}
+@media (max-width:820px){.calc{grid-template-columns:1fr}}
+.calc-in{padding:28px 30px}
+.calc h3{margin:0 0 4px;font-size:22px;font-weight:800;font-stretch:110%}
+.calc-sub{margin:0 0 20px;color:var(--muted);font-size:15px}
+.calc label{display:flex;justify-content:space-between;font-weight:600;font-size:15px;margin:18px 0 8px}
+.calc output{font-weight:800;background:var(--tag);color:var(--tag-ink);padding:0 8px;border-radius:3px}
+.calc input[type=range]{width:100%;accent-color:var(--ink);height:28px}
+.freq{border:0;padding:0;margin:20px 0 0;display:flex;flex-wrap:wrap;gap:8px}
+.freq legend{font-weight:600;font-size:15px;margin-bottom:8px;padding:0}
+.freq label{margin:0;font-weight:500;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--rule);border-radius:999px;padding:6px 14px;cursor:pointer}
+.freq label:has(input:checked){border-color:var(--ink);background:color-mix(in srgb,var(--tag) 22%,transparent)}
+.freq input{accent-color:var(--ink);margin:0}
+.calc-out{background:var(--tag);color:#1A1D21;padding:28px 30px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.calc-out::before{content:"";position:absolute;left:-7px;top:0;bottom:0;width:14px;background:radial-gradient(circle at 0 50%,var(--surface) 5px,transparent 5.5px) 0 0/14px 16px repeat-y}
+@media (max-width:820px){.calc-out::before{display:none}}
+.calc-plan{margin:0;font:600 13px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}
+.calc-price{margin:10px 0 2px;font-size:18px}
+.calc-price b{font-size:56px;font-weight:800;font-stretch:118%;letter-spacing:-.03em;line-height:1}
+.calc-setup,.calc-pages{margin:2px 0;font-size:14px;color:#3A3D40}
+.calc-out .btn{margin-top:18px;align-self:flex-start;background:#1A1D21;color:#FFD23F;border-color:#1A1D21}
+.calc-out .btn:hover{background:transparent;color:#1A1D21}
+
+.any-wall{display:grid;grid-template-columns:repeat(4,1fr);gap:36px 26px;padding:16px 6px 8px}
+@media (max-width:980px){.any-wall{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.any-wall{gap:28px 14px}.any-wall .note-p{font-size:15px;padding:22px 12px 14px}.any-wall .note-p b{font-size:17px}}
+.any-wall .note-p{font-size:17px;min-height:150px}
+.any-wall .note-p b{display:block;font-family:"Kalam",cursive;font-weight:700;font-size:21px;line-height:1.2;margin-bottom:6px}
+.any-foot{margin-top:40px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px;border-top:2px solid var(--ink);padding-top:24px}
+.any-foot p{margin:0;font-size:18px;max-width:38em}
+
+.side-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.side-top .note-p{margin:0 0 32px auto}
+.founding{border:2px dashed var(--up);border-radius:6px;padding:14px 18px;margin:0 0 28px;font-size:15px;color:var(--muted)}
+.founding b{display:block;color:var(--up);font-size:16px;margin-bottom:2px}
+.receipt li > span{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -460,6 +509,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
     <a class="brand" href="#">Cayden Chai</a>
     <nav aria-label="Main">
       <a href="#services">Services</a>
+      <a href="#anything">Anything else</a>
       <a href="#work">Work</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
@@ -578,33 +628,65 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
 
 <section id="services">
   <div class="wrap">
-    <h2>What I build</h2>
-    <p class="sub">Fixed price. You own the code and the data.</p>
+    <div class="sec-head">
+      <div>
+        <h2>What I build</h2>
+        <p class="sub">For online stores in Singapore and Southeast Asia. Fixed prices. You own the code and the data.</p>
+      </div>
+      <div class="cur" role="group" aria-label="Currency"><button type="button" data-cur="usd" aria-pressed="true">USD</button><button type="button" data-cur="sgd" aria-pressed="false">SGD</button></div>
+    </div>
     <div class="tags">
       <div class="tag-hang" style="--r:-2deg"><article class="tag">
-        <p class="sku">SKU MON-01</p>
-        <h3>Price &amp; stock monitor</h3>
-        <p>Track competitor products daily. Get an alert when prices, stock or listings change.</p>
-        <ul><li>Alerts on Telegram, Slack or email</li><li>Full price history in a Google Sheet</li></ul>
+        <p class="sku">SKU MON-20 &middot; MONTHLY</p>
+        <h3>Starter monitor</h3>
+        <p>Watch your key competitors every day and get an alert when anything changes.</p>
+        <ul><li>Up to 20 products, 3 competitors</li><li>Daily checks, alerts on Telegram or email</li><li>Price history in a Google Sheet</li><li>Fixes included, cancel anytime</li></ul>
         <div class="spacer"></div>
-        <p class="amt num"><small>From</small><b>$50</b><small>setup</small></p>
+        <p class="amt num"><small>+ <span class="money" data-usd="50" data-sgd="65">$50</span> setup</small><b class="money" data-usd="29" data-sgd="39">$29</b><small>per month</small></p>
+        <a class="tag-cta" href="#contact" data-plan="Starter monitor (20 products, 3 competitors, daily)">Start with this</a>
       </article></div>
       <div class="tag-hang" style="--r:1.5deg"><article class="tag">
-        <p class="sku">SKU SCR-02</p>
-        <h3>Custom web scraper</h3>
-        <p>Pull data from a public website into Google Sheets, CSV or your API.</p>
-        <ul><li>Every row checked before delivery</li><li>One-off or on a schedule</li></ul>
+        <p class="sku">SKU MON-100 &middot; MONTHLY</p>
+        <p class="pop">Best value per product</p>
+        <h3>Growth monitor</h3>
+        <p>Your whole catalogue against the whole market, with stock and new-listing alerts.</p>
+        <ul><li>Up to 100 products, 10 competitors</li><li>Price, stock and new-listing alerts</li><li>Telegram, Slack or email</li><li>Fixes included, cancel anytime</li></ul>
         <div class="spacer"></div>
-        <p class="amt num"><small>From</small><b>$45</b><small>one site</small></p>
+        <p class="amt num"><small>+ <span class="money" data-usd="50" data-sgd="65">$50</span> setup</small><b class="money" data-usd="79" data-sgd="99">$79</b><small>per month</small></p>
+        <a class="tag-cta" href="#contact" data-plan="Growth monitor (100 products, 10 competitors, daily)">Start with this</a>
       </article></div>
       <div class="tag-hang" style="--r:-1deg"><article class="tag">
-        <p class="sku">SKU CARE-03</p>
-        <h3>Care plan</h3>
-        <p>Websites change. I keep your monitor running and fix it within 48 hours.</p>
-        <ul><li>Daily health check</li><li>Alert if a run ever fails</li></ul>
+        <p class="sku">SKU SCR-01 &middot; ONE-OFF</p>
+        <h3>Custom web scraper</h3>
+        <p>Pull data from any public website into Google Sheets, CSV or your API.</p>
+        <ul><li>Every row checked before delivery</li><li>One-off, or on a schedule</li><li>Fixes free for 30 days</li></ul>
         <div class="spacer"></div>
-        <p class="amt num"><small>&nbsp;</small><b>$99</b><small>per month</small></p>
+        <p class="amt num"><small>From</small><b class="money" data-usd="45" data-sgd="59">$45</b><small>one site</small></p>
+        <a class="tag-cta" href="#contact" data-plan="Custom web scraper">Start with this</a>
       </article></div>
+    </div>
+
+    <div class="calc" id="calc">
+      <div class="calc-in">
+        <h3>Price your monitor</h3>
+        <p class="calc-sub">Move the sliders. The price updates live.</p>
+        <label for="c-prod">Products to track <output id="o-prod" class="num">20</output></label>
+        <input type="range" id="c-prod" min="5" max="200" step="5" value="20">
+        <label for="c-comp">Competitor stores <output id="o-comp" class="num">3</output></label>
+        <input type="range" id="c-comp" min="1" max="20" step="1" value="3">
+        <fieldset class="freq"><legend>How often</legend>
+          <label><input type="radio" name="c-freq" value="1" checked> Daily</label>
+          <label><input type="radio" name="c-freq" value="2"> Twice a day</label>
+          <label><input type="radio" name="c-freq" value="h"> Hourly</label>
+        </fieldset>
+      </div>
+      <div class="calc-out" aria-live="polite">
+        <p class="calc-plan" id="c-plan">Starter monitor</p>
+        <p class="calc-price num"><b id="c-price">$29</b><span id="c-per">/month</span></p>
+        <p class="calc-setup num" id="c-setup">+ $50 one-time setup</p>
+        <p class="calc-pages num" id="c-pages">60 product pages checked daily</p>
+        <a class="btn primary" href="#contact" id="c-go">Get a free sample of this</a>
+      </div>
     </div>
   </div>
 </section>
@@ -666,6 +748,27 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
   </div>
 </section>
 
+<section id="anything">
+  <div class="wrap">
+    <h2>Stuck on something else? Tell me the problem.</h2>
+    <p class="sub">I build software end to end, not just scrapers. If a task is eating your week, there's a good chance I can automate it. Here are some things I can build:</p>
+    <div class="any-wall">
+      <div class="note-p lined" style="--r:-2deg"><span class="tape"></span><b>Google Sheets automations</b>Reports that fill themselves in every morning.</div>
+      <div class="note-p green" style="--r:1.5deg"><span class="pin"></span><b>Telegram and email bots</b>Order alerts, daily summaries, reminders to your team.</div>
+      <div class="note-p blue" style="--r:-1deg"><span class="clip"></span><b>AI workflows</b>Sort enquiries, draft replies and summarise documents with Claude or ChatGPT.</div>
+      <div class="note-p pink" style="--r:2deg"><span class="tape pinkt"></span><b>Sales dashboards</b>All your numbers on one live page, not five tabs.</div>
+      <div class="note-p grey" style="--r:-1.5deg"><span class="tape grey"></span><b>Shopify integrations</b>Connect your store to sheets, suppliers or other tools.</div>
+      <div class="note-p grid" style="--r:1deg"><span class="binder"></span><b>Web apps and internal tools</b>Booking pages, order trackers, simple admin panels.</div>
+      <div class="note-p lined pink" style="--r:-2.5deg"><span class="tape l"></span><span class="tape r"></span><b>Chrome extensions</b>Small browser tools for your team's daily work.</div>
+      <div class="note-p green lined" style="--r:1.8deg"><span class="pin"></span><b>Data cleanup</b>Messy spreadsheets merged, de-duplicated and fixed.</div>
+    </div>
+    <div class="any-foot">
+      <p>Not on the list? Describe the problem in plain words. I'll tell you honestly if I can build it, and what it would cost, within 24 hours.</p>
+      <a class="btn primary" href="#contact" data-plan="Something else: (describe the problem you're facing)">Describe my problem</a>
+    </div>
+  </div>
+</section>
+
 <section id="how">
   <div class="wrap">
     <h2>How it works</h2>
@@ -688,7 +791,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
             <div class="msg out file"><span class="ic" aria-hidden="true">CSV</span><div><b>sample-store-b.csv</b><small>25 rows &middot; prices, stock, links</small><time>10:02</time></div></div>
             <p class="msg in">That's exactly what I need. How much for daily?<time>10:31</time></p>
             <p class="day" data-step="2">Day 2 &middot; Fixed price</p>
-            <p class="msg out">$50 setup. Alerts go to your Telegram. Ready by Thursday.<time>10:40</time></p>
+            <p class="msg out">Starter plan: $50 setup, then $29 a month. Alerts go to your Telegram. Ready by Thursday.<time>10:40</time></p>
             <p class="msg in">Deal.<time>10:42</time></p>
             <p class="day" data-step="3">Day 4 onward &middot; Alerts</p>
             <div class="msg bot"><span class="dot" aria-hidden="true"></span><div><b>Price drop on store-b.com</b><br>Desk lamp LED: $49.90 to $44.90 (&minus;10%)<time>07:00</time></div></div>
@@ -749,24 +852,24 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
 <section id="pricing">
   <div class="wrap">
     <h2>Simple, fixed pricing</h2>
-    <p class="sub">In USD. Bigger jobs get a quote after the free sample.</p>
+    <p class="sub">Monthly plans for monitoring, one-off prices for scrapers. Bigger jobs get a quote after the free sample.</p>
     <div class="price-grid">
       <div class="receipt-wrap">
         <div class="receipt num" id="receipt">
           <p class="c shop">CAYDEN CHAI</p>
-          <p class="c meta">Scraping &amp; price monitoring<br>Singapore &middot; prices in USD</p>
+          <p class="c meta">Scraping &amp; price monitoring<br>Singapore &middot; prices in <span class="cur-name">USD</span></p>
           <hr>
           <ul>
-            <li><b>Quick extract</b><span>$45</span><small>1 site, up to 500 rows, one-time CSV or Google Sheet</small></li>
-            <li><b>Re-runnable scraper</b><span>$120</span><small>1 site, up to 10,000 rows, plus a weekly scheduled run</small></li>
-            <li><b>Automated pipeline</b><span>$300</span><small>Up to 3 sites, daily runs, change alerts</small></li>
-            <li><b>Price &amp; stock monitor</b><span>from $50</span><small>Daily checks on your chosen competitor pages, with alerts</small></li>
-            <li><b>Care plan</b><span>$99/mo</span><small>Up to 10 pages, daily health check, fixes within 48 hours</small></li>
+            <li><b>Starter monitor</b><span><span class="money" data-usd="29" data-sgd="39">$29</span>/mo</span><small>20 products, 3 competitors, daily alerts. + <span class="money" data-usd="50" data-sgd="65">$50</span> setup</small></li>
+            <li><b>Growth monitor</b><span><span class="money" data-usd="79" data-sgd="99">$79</span>/mo</span><small>100 products, 10 competitors, stock + new listings. + <span class="money" data-usd="50" data-sgd="65">$50</span> setup</small></li>
+            <li><b>Quick extract</b><span class="money" data-usd="45" data-sgd="59">$45</span><small>1 site, up to 500 rows, one-time CSV or Google Sheet</small></li>
+            <li><b>Re-runnable scraper</b><span class="money" data-usd="120" data-sgd="159">$120</span><small>1 site, up to 10,000 rows, plus a weekly scheduled run</small></li>
+            <li><b>Custom build</b><span>QUOTE</span><small>Bigger monitors, other automations, anything else. Quoted after the free sample</small></li>
           </ul>
           <hr>
-          <div class="row"><span>Free sample, 25 rows</span><span>$0.00</span></div>
+          <div class="row"><span>Free sample, 25 rows</span><span class="money" data-usd="0.00" data-sgd="0.00">$0.00</span></div>
           <div class="row"><span>Payment details needed</span><span>NONE</span></div>
-          <div class="row total"><span>TOTAL TODAY</span><span>$0.00</span></div>
+          <div class="row total"><span>TOTAL TODAY</span><span class="money" data-usd="0.00" data-sgd="0.00">$0.00</span></div>
           <hr>
           <p class="c"><b>30-DAY FIX GUARANTEE</b></p>
           <p class="c g">If anything I build breaks in the first 30 days, I fix it free.</p>
@@ -775,14 +878,17 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
         </div>
       </div>
       <div class="price-side">
-        <div class="note-p lined" aria-hidden="true"><span class="tape"></span>Free sample first. Always.</div>
+        <div class="side-top"><div class="cur" role="group" aria-label="Currency"><button type="button" data-cur="usd" aria-pressed="true">USD</button><button type="button" data-cur="sgd" aria-pressed="false">SGD</button></div>
+        <div class="note-p lined" aria-hidden="true"><span class="tape"></span>Free sample first. Always.</div></div>
+        <div class="founding"><b>Founding client offer</b>The first 3 stores get the setup fee waived, in return for an honest review once it's running.</div>
         <h3>Every package includes</h3>
         <ul class="ticks">
           <li>A free sample before you pay anything</li>
           <li>One fixed price, agreed up front</li>
           <li>You own the code and the data</li>
           <li>Every row checked before delivery</li>
-          <li>Fixes free for 30 days</li>
+          <li>Monitors: fixes included, cancel anytime</li>
+          <li>One-off scrapers: fixes free for 30 days</li>
         </ul>
         <p class="note">Prefer platform payment protection? Hire me on <a href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Upwork</a> or <a href="https://www.fiverr.com/n1njla" rel="noopener">Fiverr</a>.</p>
       </div>
@@ -814,7 +920,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
   <div class="wrap">
     <h2>Questions clients ask</h2>
     <details><summary>Is this legal?</summary><p>I only collect public data. No logins, no bypassing CAPTCHAs or paywalls, and no personal data.</p></details>
-    <details><summary>What if the website changes?</summary><p>You get an alert instead of bad data. In the first 30 days, fixes are free. After that, the care plan covers it.</p></details>
+    <details><summary>What if the website changes?</summary><p>You get an alert instead of bad data. Monitor plans include fixes for as long as you subscribe. One-off scrapers get free fixes for 30 days.</p></details>
     <details><summary>Which sites can you track?</summary><p>Most public online stores and marketplaces, including Shopify. Send a link and I'll confirm with a free sample.</p></details>
     <details><summary>What format do I get?</summary><p>Google Sheets, CSV, Excel, JSON or your API. Alerts on Telegram, Slack or email.</p></details>
     <details><summary>How fast is it?</summary><p>The sample comes within 24 hours. Most projects take 2 to 4 days.</p></details>
@@ -824,13 +930,14 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
 <section id="contact" class="contact">
   <div class="wrap">
     <h2>Get a free sample</h2>
-    <p class="sub">Tell me the site and what you want to know. I'll reply within 24 hours with up to 25 real rows.</p>
+    <p class="sub">Tell me what you need, or the problem you're facing. I'll reply within 24 hours, with up to 25 real rows if it's a scraping job.</p>
     <div class="contact-grid">
     <form class="cform" id="cform" novalidate>
-      <div><label for="f-site">Website(s) to track</label><input id="f-site" name="fi-text-websites" required placeholder="competitor-store.com"></div>
+      <div><label for="f-site">Website(s), if any</label><input id="f-site" name="fi-text-websites" placeholder="competitor-store.com"></div>
       <div><label for="f-email">Your email</label><input id="f-email" name="fi-sender-email" type="email" required autocomplete="email" placeholder="you@yourstore.com"></div>
-      <div class="full"><label for="f-what">What do you want to know?</label><textarea id="f-what" name="fi-text-request" required placeholder="Prices and stock for 20 products, checked daily, sent to Google Sheets"></textarea></div>
+      <div class="full"><label for="f-what">What do you need? (or what problem are you facing?)</label><textarea id="f-what" name="fi-text-request" required placeholder="Prices and stock for 20 products, checked daily, sent to Google Sheets"></textarea></div>
       <input type="hidden" name="fi-text-source" id="f-source" value="direct">
+      <input type="hidden" name="fi-text-plan" id="f-plan" value="">
       <div class="row-actions">
         <button class="btn primary" type="submit" id="f-submit">Send my sample request</button>
         <a class="btn ghost" href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Hire me on Upwork</a>
@@ -1039,6 +1146,60 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
       M.animate(rc,{clipPath:['inset(0 0 100% 0)','inset(0 0 0% 0)']},{duration:1.5,ease:[.45,.05,.55,.95]}).then(function(){rc.style.clipPath='';});
     },{amount:.25});
   }
+})();
+</script>
+<script>
+(function(){
+  // currency switch (USD / SGD), remembered per visitor, SGD by default for Singapore time zone
+  var cur='usd';
+  try{cur=localStorage.getItem('cur')||((Intl.DateTimeFormat().resolvedOptions().timeZone||'')==='Asia/Singapore'?'sgd':'usd');}catch(e){}
+  function fmt(v,c){return (c==='sgd'?'S$':'$')+v;}
+  function setCur(c){
+    cur=c; try{localStorage.setItem('cur',c);}catch(e){}
+    document.querySelectorAll('.money').forEach(function(m){m.textContent=fmt(m.dataset[c],c);});
+    document.querySelectorAll('.cur button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.cur===c?'true':'false');});
+    document.querySelectorAll('.cur-name').forEach(function(n){n.textContent=c.toUpperCase();});
+    calc();
+  }
+  document.querySelectorAll('.cur button').forEach(function(b){b.addEventListener('click',function(){setCur(b.dataset.cur);});});
+
+  // monitor calculator
+  var P=document.getElementById('c-prod'),C=document.getElementById('c-comp');
+  var plan='Starter monitor', price={usd:'29',sgd:'39'};
+  var T={s1:{usd:29,sgd:39},s2:{usd:44,sgd:59},g1:{usd:79,sgd:99},g2:{usd:119,sgd:159}};
+  function calc(){
+    if(!P)return;
+    var p=+P.value,c=+C.value,f=(document.querySelector('input[name=c-freq]:checked')||{}).value||'1',pages=p*c;
+    document.getElementById('o-prod').textContent=p; document.getElementById('o-comp').textContent=c;
+    var el=document.getElementById('c-price'),per=document.getElementById('c-per'),setup=document.getElementById('c-setup');
+    var freqTxt=f==='1'?'daily':f==='2'?'twice a day':'every hour';
+    document.getElementById('c-pages').textContent=pages.toLocaleString('en-US')+' product pages checked '+freqTxt;
+    var key=null;
+    if(f!=='h'){ if(pages<=60) key=f==='1'?'s1':'s2'; else if(pages<=1000) key=f==='1'?'g1':'g2'; }
+    if(key){
+      plan=(key[0]==='s'?'Starter':'Growth')+' monitor'+(f==='2'?', twice a day':'');
+      el.textContent=fmt(T[key][cur],cur); per.textContent='/month';
+      setup.textContent='+ '+fmt(cur==='sgd'?65:50,cur)+' one-time setup';
+    } else {
+      plan='Custom monitor'; el.textContent='Quote'; per.textContent='';
+      setup.textContent='Bigger than Growth. I’ll price it after the free sample.';
+    }
+    document.getElementById('c-plan').textContent=plan;
+    document.getElementById('c-go').dataset.plan=plan+' ('+p+' products, '+c+' competitors, '+freqTxt+')';
+  }
+  if(P){[P,C].forEach(function(i){i.addEventListener('input',calc);});
+    document.querySelectorAll('input[name=c-freq]').forEach(function(r){r.addEventListener('change',calc);});}
+  setCur(cur);
+
+  // "Start with this" buttons prefill the form
+  var what=document.getElementById('f-what'), fp=document.getElementById('f-plan');
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('[data-plan]'); if(!a)return;
+    var pl=a.dataset.plan; fp.value=pl;
+    what.value=pl.indexOf('Something else')===0?'The problem I’m facing: ':'I’m interested in: '+pl+'.\nSites to track: ';
+    setTimeout(function(){what.focus({preventScroll:true});what.setSelectionRange(what.value.length,what.value.length);},700);
+    if(window.va)window.va('event',{name:'plan_click',data:{plan:pl}});
+  });
 })();
 </script>
 </body>
