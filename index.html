@@ -290,6 +290,167 @@ footer{background:var(--ink);color:color-mix(in srgb,var(--bg) 60%,transparent);
   .monitor .head span{display:none}
   .hero-note.n1{top:-74px;right:4px;width:168px;font-size:15px;padding:20px 12px 12px}
 }
+
+/* ================= v5: notebook page, ticker, tags, shelf, chat, receipt ================= */
+:root{--dot:rgba(26,29,33,.16);--paper-hi:#FFFEF8;--chat:#E7E9E4;--wood1:#B07A45;--wood2:#7E5330}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--dot:rgba(236,238,234,.10);--chat:#121518;--wood1:#8A5E35;--wood2:#5C3B20}}
+:root[data-theme="dark"]{--dot:rgba(236,238,234,.10);--chat:#121518;--wood1:#8A5E35;--wood2:#5C3B20}
+
+/* notebook dot grid that drifts with scroll */
+body::before{content:"";position:fixed;left:0;right:0;top:-48px;bottom:-48px;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(circle,var(--dot) 1.1px,transparent 1.6px);background-size:24px 24px;
+  transform:translate3d(0,var(--dy,0px),0);will-change:transform}
+section{position:relative}
+main{counter-reset:pg}
+main > section{counter-increment:pg}
+main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:absolute;top:22px;right:max(24px,calc((100vw - var(--maxw))/2 + 24px));
+  font-family:"Kalam",cursive;font-size:16px;color:var(--muted);opacity:.8;transform:rotate(-3deg)}
+.contact::before{color:color-mix(in srgb,var(--bg) 60%,transparent)!important}
+@media (max-width:720px){main > section::before{top:16px;font-size:14px}}
+
+/* price ticker */
+.ticker{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);background:var(--ink);color:var(--bg);overflow:hidden;position:relative;font-size:15px}
+.ticker .label{position:absolute;left:0;top:0;bottom:0;z-index:2;display:flex;align-items:center;padding:0 16px;background:var(--tag);color:var(--tag-ink);font-weight:800;font-stretch:115%;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.ticker .track{display:flex;width:max-content;animation:tick 48s linear infinite;padding-left:150px}
+.ticker:hover .track,.ticker:focus-within .track{animation-play-state:paused}
+.ticker ul{display:flex;list-style:none;margin:0;padding:0}
+.ticker li{white-space:nowrap;padding:12px 26px;border-right:1px solid color-mix(in srgb,var(--bg) 18%,transparent)}
+.ticker li b{font-weight:700;margin-left:6px}
+.ticker .dn b{color:var(--drop)} .ticker .upx b{color:var(--up)} .ticker .st b{color:var(--tag)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ticker .dn b{color:#C8102E}:root:not([data-theme="light"]) .ticker .upx b{color:#1F7A4D}}
+:root[data-theme="dark"] .ticker .st b{color:#8A5A00}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ticker .st b{color:#8A5A00}}
+:root[data-theme="dark"] .ticker .dn b{color:#C8102E} :root[data-theme="dark"] .ticker .upx b{color:#1F7A4D}
+.ticker .site{opacity:.6;margin-left:6px;font-size:13px}
+@keyframes tick{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion: reduce){.ticker .track{animation:none}.ticker{overflow-x:auto}}
+
+/* services as hanging price tags */
+.tags{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:36px;padding-top:62px;margin-top:8px}
+.tags::before{content:"";position:absolute;top:8px;left:-12px;right:-12px;height:10px;border-radius:5px;background:linear-gradient(#C9CED2,#7D858C 60%,#5E656B);box-shadow:0 3px 4px rgba(0,0,0,.25)}
+.tag-hang{--r:0deg;position:relative;transform-origin:50% -50px;transform:rotate(var(--r));filter:drop-shadow(0 12px 14px rgba(0,0,0,.2))}
+.tag-hang::before{content:"";position:absolute;left:50%;top:-50px;width:2px;margin-left:-1px;height:66px;background:#8B9196;z-index:0}
+.tag{position:relative;z-index:1;height:100%;background:var(--tag);color:#1A1D21;padding:50px 26px 24px;
+  clip-path:polygon(18% 0,82% 0,100% 8%,100% 100%,0 100%,0 8%);display:flex;flex-direction:column}
+.tag::before{content:"";position:absolute;top:16px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--bg);box-shadow:inset 0 1px 3px rgba(0,0,0,.45)}
+.tag .sku{font:600 11px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;opacity:.7;margin:0 0 10px}
+.tag h3{margin:0 0 8px;font-size:22px;font-weight:800;font-stretch:110%;line-height:1.2}
+.tag p{margin:0;font-size:15px;color:#3A3D40}
+.tag ul{margin:12px 0 0;padding-left:18px;font-size:14px;color:#3A3D40}
+.tag .amt{margin-top:auto;padding-top:18px;border-top:2px dashed rgba(26,29,33,.35);margin-bottom:0;display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.tag .amt b{font-size:34px;font-weight:800;font-stretch:118%;line-height:1;letter-spacing:-.02em}
+.tag .amt small{font-size:13px;color:#3A3D40}
+.tag .spacer{height:18px}
+@keyframes swing{0%{transform:rotate(var(--r))}20%{transform:rotate(calc(var(--r) + 6deg))}40%{transform:rotate(calc(var(--r) - 4deg))}60%{transform:rotate(calc(var(--r) + 2.5deg))}80%{transform:rotate(calc(var(--r) - 1deg))}100%{transform:rotate(var(--r))}}
+@media (prefers-reduced-motion: no-preference){.tag-hang:hover,.tag-hang:focus-within{animation:swing 1.3s ease-out}}
+@media (max-width:900px){
+  .tags{grid-template-columns:1fr;gap:72px;padding-top:56px;max-width:420px}
+  .tags::before{display:none}
+  .tag-hang::after{content:"";position:absolute;left:50%;top:-58px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#D5DADE,#7D858C 65%,#555C62);box-shadow:0 2px 3px rgba(0,0,0,.3)}
+}
+
+/* the shelf */
+.shelf-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:56px;align-items:center}
+@media (max-width:900px){.shelf-grid{grid-template-columns:1fr;gap:40px}}
+.shelf-box{position:relative;padding:40px 0 0}
+.shelf-hint{position:absolute;right:0;top:-6px;width:150px;--r:4deg;font-size:17px;padding:20px 14px 14px;z-index:2}
+.shelf{display:flex;align-items:flex-end;gap:5px;height:250px;padding:0 14px;position:relative;margin:0;list-style:none}
+.shelf::after{content:"";position:absolute;left:-10px;right:-10px;bottom:-20px;height:20px;border-radius:2px;
+  background:linear-gradient(var(--wood1),var(--wood2));box-shadow:0 14px 16px -10px rgba(0,0,0,.5)}
+.shelf::before{content:"";position:absolute;left:-10px;right:-10px;bottom:-26px;height:6px;background:rgba(0,0,0,.18);filter:blur(3px)}
+.book{--c:#2D4B73;--h:200px;--w:50px;--lean:0deg;height:var(--h);width:var(--w);flex:none;border:0;padding:0;cursor:pointer;position:relative;
+  background:var(--c);color:#F6F1E4;border-radius:3px 3px 1px 1px;transform-origin:50% 100%;transform:rotate(var(--lean));
+  background-image:linear-gradient(90deg,rgba(0,0,0,.22),rgba(255,255,255,.08) 18%,transparent 40%,transparent 78%,rgba(0,0,0,.25)),
+    linear-gradient(to bottom,transparent 14px,rgba(255,255,255,.35) 14px 16px,transparent 16px 20px,rgba(255,255,255,.35) 20px 22px,transparent 22px calc(100% - 24px),rgba(0,0,0,.25) calc(100% - 24px) calc(100% - 20px),transparent 0);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+.book span{position:absolute;left:0;right:0;top:30px;bottom:30px;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;transform:rotate(180deg);
+  font:700 13px/1.1 "Archivo",sans-serif;font-stretch:112%;letter-spacing:.02em;white-space:nowrap;overflow:hidden}
+.book.light{color:#1A1D21}
+@media (prefers-reduced-motion: no-preference){.book{transition:transform .35s cubic-bezier(.2,1.4,.4,1),box-shadow .25s}}
+.book:hover,.book[aria-selected="true"]{transform:translateY(-28px) rotate(var(--lean));box-shadow:inset 0 0 0 1px rgba(0,0,0,.12),0 18px 18px -12px rgba(0,0,0,.45)}
+.book:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.book.lean{transform-origin:0 100%;margin-right:26px}
+.shelf-grid > *{min-width:0}
+.bookend{width:14px;height:110px;flex:none;align-self:flex-end;background:linear-gradient(90deg,#4A4F55,#2F3338);border-radius:2px 2px 0 0;margin-left:6px}
+@media (max-width:560px){.shelf{gap:3px;height:210px;padding:0 4px;overflow-x:auto;overflow-y:visible}.book{width:32px;height:calc(var(--h) - 34px)}.book.lean{margin-right:14px}.book span{font-size:11.5px}.bookend{display:none}.shelf-hint{display:none}}
+
+.book-stage{perspective:1600px}
+.open-book{display:grid;grid-template-columns:1fr 1fr;background:var(--paper-hi);color:#24272B;border-radius:6px 6px 8px 8px;position:relative;min-height:330px;
+  box-shadow:0 2px 0 #E7E1D2,0 4px 0 #DCD5C4,0 22px 30px -18px rgba(0,0,0,.55)}
+.open-book[hidden]{display:none}
+.open-book::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:40px;margin-left:-20px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.10) 45%,rgba(0,0,0,.16) 50%,rgba(0,0,0,.10) 55%,transparent);pointer-events:none}
+.open-book .pg{padding:30px 30px 44px;position:relative;transform-origin:0 50%}
+.open-book .pg.l{border-left:6px solid var(--c,#2D4B73);border-radius:6px 0 0 8px}
+.open-book .kick{font-family:"Kalam",cursive;font-size:18px;color:#6A6F74;margin:0 0 6px}
+.open-book h3{margin:0 0 12px;font-size:26px;line-height:1.15;font-weight:800;font-stretch:112%}
+.open-book p{margin:0 0 12px;font-size:15.5px;color:#41464B}
+.open-book ul{margin:0;padding-left:18px;font-size:15px;color:#41464B}
+.open-book li{margin-bottom:6px}
+.open-book .eg{font-family:"Kalam",cursive;font-size:17px;background:#FFF3A3;padding:10px 12px;margin-top:14px;transform:rotate(-1deg);color:#2A2A2A}
+.open-book .go{display:inline-block;margin-top:14px;font-weight:700;color:#1A1D21}
+.open-book .pnum{position:absolute;bottom:14px;font-size:12px;color:#9A9EA2}
+.open-book .l .pnum{left:30px}.open-book .r .pnum{right:30px}
+@media (max-width:640px){.open-book{grid-template-columns:1fr}.open-book::before{display:none}.open-book .pg.r{padding-top:0}.open-book .l .pnum{display:none}.open-book .pg.l{border-left:0}.open-book{border-left:6px solid var(--c,#2D4B73)}}
+
+/* how it works: chat */
+.how-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,390px);gap:72px;align-items:start}
+.how-steps{list-style:none;margin:0;padding:0;position:sticky;top:96px;counter-reset:s}
+.how-steps li{counter-increment:s;display:grid;grid-template-columns:40px 1fr;gap:4px 14px;padding:18px 0;border-top:1px solid var(--rule)}
+.how-steps li::before{content:counter(s);grid-row:span 2;display:grid;place-items:center;width:34px;height:34px;border-radius:4px;border:2px solid var(--ink);font-weight:800}
+.how-steps h3{margin:0;font-size:19px;font-weight:700}
+.how-steps p{margin:0;color:var(--muted);font-size:15px}
+.js .how-steps li{opacity:.4}
+.how-steps li.on{opacity:1}
+.how-steps li.on::before{background:var(--tag);color:var(--tag-ink);border-color:var(--tag)}
+@media (prefers-reduced-motion: no-preference){.how-steps li,.how-steps li::before{transition:opacity .3s,background-color .3s,color .3s,border-color .3s}}
+@media (max-width:900px){.how-grid{grid-template-columns:1fr;gap:0}.how-steps{display:none}}
+.phone{background:#0D0F11;border-radius:40px;padding:11px;box-shadow:0 30px 50px -28px rgba(0,0,0,.6),inset 0 0 0 2px #2A2E33;max-width:390px;margin:0 auto}
+.screen{background:var(--chat);border-radius:30px;overflow:hidden}
+.chat-head{display:flex;align-items:center;gap:10px;padding:16px 16px 12px;background:var(--surface);border-bottom:1px solid var(--rule)}
+.chat-head .av{width:34px;height:34px;border-radius:50%;background:#CFE6C4;color:#1A1D21;display:grid;place-items:center;font-weight:800;font-size:14px}
+.chat-head b{display:block;font-size:15px;line-height:1.2}
+.chat-head small{color:var(--muted);font-size:12px}
+.chat-head .eg-tag{margin-left:auto;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);border:1px solid var(--rule);padding:3px 7px;border-radius:3px}
+.msgs{display:flex;flex-direction:column;gap:8px;padding:16px 12px 22px}
+.msg{max-width:82%;padding:9px 13px 7px;border-radius:18px;font-size:15px;line-height:1.4;position:relative}
+.msg time{display:block;text-align:right;font-size:11px;opacity:.55;margin-top:2px}
+.msg.in{align-self:flex-start;background:var(--surface);color:var(--ink);border-bottom-left-radius:5px}
+.msg.out{align-self:flex-end;background:var(--tag);color:#1A1D21;border-bottom-right-radius:5px}
+.msg.file{display:flex;gap:10px;align-items:center}
+.msg.file .ic{flex:none;width:38px;height:44px;border-radius:5px;background:#1F7A4D;color:#fff;font-size:10px;font-weight:800;display:grid;place-items:end center;padding-bottom:6px}
+.msg.file b{display:block;font-size:14px}
+.msg.file small{font-size:12px;opacity:.7}
+.msg.bot{align-self:flex-start;background:var(--ink);color:var(--bg);border-bottom-left-radius:5px;display:flex;gap:10px}
+.msg.bot .dot{width:9px;height:9px;border-radius:50%;background:var(--tag);margin-top:7px;flex:none}
+.day{align-self:center;font-size:12px;font-weight:600;color:var(--muted);background:var(--surface);border:1px solid var(--rule);padding:3px 11px;border-radius:12px;margin:8px 0 2px}
+
+/* pricing: receipt */
+.price-grid{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:72px;align-items:start}
+@media (max-width:900px){.price-grid{grid-template-columns:1fr;gap:40px}}
+.receipt-wrap{filter:drop-shadow(0 16px 18px rgba(0,0,0,.22));transform:rotate(-1.2deg)}
+.receipt{--s:14px;background:var(--paper-hi);color:#222;font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono","Courier New",monospace;font-size:14px;line-height:1.45;padding:34px 28px 36px;
+  -webkit-mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/var(--s) 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/var(--s) 51% repeat-x;
+          mask:conic-gradient(from 135deg at top,#0000,#000 1deg 89deg,#0000 90deg) top/var(--s) 51% repeat-x,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/var(--s) 51% repeat-x}
+.receipt p{margin:0}
+.receipt .c{text-align:center}
+.receipt .shop{font-size:18px;font-weight:700;letter-spacing:.12em}
+.receipt .meta{font-size:12px;color:#555;margin-top:4px}
+.receipt hr{border:0;border-top:2px dashed #9A9A9A;margin:16px 0}
+.receipt ul{list-style:none;margin:0;padding:0}
+.receipt li{display:grid;grid-template-columns:1fr auto;gap:0 12px;padding:6px 0}
+.receipt li b{font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.receipt li small{grid-column:1/-1;color:#5A5A5A;font-size:12.5px}
+.receipt .row{display:flex;justify-content:space-between;gap:12px;padding:3px 0}
+.receipt .total{font-size:19px;font-weight:800;padding-top:8px}
+.receipt .g{font-size:12.5px;color:#444;margin-top:2px}
+.receipt .bars{height:46px;margin:18px auto 8px;width:78%;background:repeating-linear-gradient(90deg,#222 0 2px,transparent 2px 4px,#222 4px 5px,transparent 5px 8px,#222 8px 11px,transparent 11px 12px,#222 12px 13px,transparent 13px 17px)}
+.receipt .thx{font-size:12px;letter-spacing:.1em}
+.price-side .note-p{width:210px;--r:3deg;font-size:20px;margin:0 0 36px auto}
+@media (max-width:900px){.price-side .note-p{margin:0 0 28px 0}}
+.price-side h3{font-size:20px;margin:0 0 14px;font-weight:700}
+.price-side ul.ticks{list-style:none;margin:0 0 24px;padding:0}
+.price-side ul.ticks li{padding:12px 0 12px 32px;border-bottom:1px solid var(--rule);position:relative}
+.price-side ul.ticks li::before{content:"";position:absolute;left:4px;top:17px;width:12px;height:7px;border-left:3px solid var(--up);border-bottom:3px solid var(--up);transform:rotate(-45deg)}
 </style>
 </head>
 <body>
@@ -346,6 +507,32 @@ footer{background:var(--ink);color:color-mix(in srgb,var(--bg) 60%,transparent);
   </div>
 </div>
 
+<div class="ticker" aria-label="Example price alerts">
+  <span class="label" aria-hidden="true">Example alerts</span>
+  <div class="track">
+    <ul>
+      <li class="dn">Desk lamp LED<b>&minus;10%</b><span class="site">store-b</span></li>
+      <li class="upx">Wireless earbuds<b>+10%</b><span class="site">store-a</span></li>
+      <li class="st">USB-C hub 7-in-1<b>Back in stock</b><span class="site">store-c</span></li>
+      <li class="dn">Steel bottle 1L<b>&minus;19%</b><span class="site">store-b</span></li>
+      <li class="st">Air fryer 4L<b>New listing</b><span class="site">store-d</span></li>
+      <li class="dn">Yoga mat 6mm<b>&minus;5%</b><span class="site">store-a</span></li>
+      <li class="upx">Phone case<b>+8%</b><span class="site">store-c</span></li>
+      <li class="st">Desk fan<b>Out of stock</b><span class="site">store-b</span></li>
+    </ul>
+    <ul aria-hidden="true">
+      <li class="dn">Desk lamp LED<b>&minus;10%</b><span class="site">store-b</span></li>
+      <li class="upx">Wireless earbuds<b>+10%</b><span class="site">store-a</span></li>
+      <li class="st">USB-C hub 7-in-1<b>Back in stock</b><span class="site">store-c</span></li>
+      <li class="dn">Steel bottle 1L<b>&minus;19%</b><span class="site">store-b</span></li>
+      <li class="st">Air fryer 4L<b>New listing</b><span class="site">store-d</span></li>
+      <li class="dn">Yoga mat 6mm<b>&minus;5%</b><span class="site">store-a</span></li>
+      <li class="upx">Phone case<b>+8%</b><span class="site">store-c</span></li>
+      <li class="st">Desk fan<b>Out of stock</b><span class="site">store-b</span></li>
+    </ul>
+  </div>
+</div>
+
 <section id="problem">
   <div class="wrap">
     <h2>Does your week look like this?</h2>
@@ -393,30 +580,87 @@ footer{background:var(--ink);color:color-mix(in srgb,var(--bg) 60%,transparent);
   <div class="wrap">
     <h2>What I build</h2>
     <p class="sub">Fixed price. You own the code and the data.</p>
-    <div class="offers">
-      <div class="offer">
+    <div class="tags">
+      <div class="tag-hang" style="--r:-2deg"><article class="tag">
+        <p class="sku">SKU MON-01</p>
         <h3>Price &amp; stock monitor</h3>
-        <div>
-          <p>Track competitor products daily. Get an alert when prices, stock or listings change.</p>
-          <ul><li>Alerts on Telegram, Slack or email</li><li>Full price history in a Google Sheet</li></ul>
-        </div>
-        <div class="from num">From $50<small>setup</small></div>
-      </div>
-      <div class="offer">
+        <p>Track competitor products daily. Get an alert when prices, stock or listings change.</p>
+        <ul><li>Alerts on Telegram, Slack or email</li><li>Full price history in a Google Sheet</li></ul>
+        <div class="spacer"></div>
+        <p class="amt num"><small>From</small><b>$50</b><small>setup</small></p>
+      </article></div>
+      <div class="tag-hang" style="--r:1.5deg"><article class="tag">
+        <p class="sku">SKU SCR-02</p>
         <h3>Custom web scraper</h3>
-        <div>
-          <p>Pull data from a public website into Google Sheets, CSV or your API.</p>
-          <ul><li>Every row checked before delivery</li><li>One-off or on a schedule</li></ul>
-        </div>
-        <div class="from num">From $45<small>one site</small></div>
-      </div>
-      <div class="offer">
+        <p>Pull data from a public website into Google Sheets, CSV or your API.</p>
+        <ul><li>Every row checked before delivery</li><li>One-off or on a schedule</li></ul>
+        <div class="spacer"></div>
+        <p class="amt num"><small>From</small><b>$45</b><small>one site</small></p>
+      </article></div>
+      <div class="tag-hang" style="--r:-1deg"><article class="tag">
+        <p class="sku">SKU CARE-03</p>
         <h3>Care plan</h3>
-        <div>
-          <p>Websites change. I keep your monitor running and fix it within 48 hours.</p>
-          <ul><li>Daily health check</li><li>Alert if a run ever fails</li></ul>
+        <p>Websites change. I keep your monitor running and fix it within 48 hours.</p>
+        <ul><li>Daily health check</li><li>Alert if a run ever fails</li></ul>
+        <div class="spacer"></div>
+        <p class="amt num"><small>&nbsp;</small><b>$99</b><small>per month</small></p>
+      </article></div>
+    </div>
+  </div>
+</section>
+
+<section id="shelf">
+  <div class="wrap">
+    <h2>What can I track for you?</h2>
+    <p class="sub">Pull a book off the shelf. Each one is a job I can set up for your store.</p>
+    <div class="shelf-grid">
+      <div class="shelf-box">
+        <div class="note-p shelf-hint" aria-hidden="true"><span class="tape"></span>Hover or tap a book</div>
+        <div class="shelf" role="tablist" aria-label="Things I can track">
+          <button class="book" role="tab" id="b-1" aria-controls="ob-1" aria-selected="true" tabindex="0" style="--c:#2D4B73;--h:206px"><span>Competitor prices</span></button>
+          <button class="book" role="tab" id="b-2" aria-controls="ob-2" aria-selected="false" tabindex="-1" style="--c:#B5372F;--h:186px;--w:46px"><span>Restock alerts</span></button>
+          <button class="book light" role="tab" id="b-3" aria-controls="ob-3" aria-selected="false" tabindex="-1" style="--c:#E4B53A;--h:220px;--w:54px"><span>New listings</span></button>
+          <button class="book" role="tab" id="b-4" aria-controls="ob-4" aria-selected="false" tabindex="-1" style="--c:#2F6B4F;--h:196px"><span>Reseller prices</span></button>
+          <button class="book light" role="tab" id="b-5" aria-controls="ob-5" aria-selected="false" tabindex="-1" style="--c:#E9E2CF;--h:176px;--w:44px"><span>Reviews</span></button>
+          <button class="book" role="tab" id="b-6" aria-controls="ob-6" aria-selected="false" tabindex="-1" style="--c:#5B3F6B;--h:212px;--w:52px"><span>Data to Sheets</span></button>
+          <button class="book" role="tab" id="b-7" aria-controls="ob-7" aria-selected="false" tabindex="-1" style="--c:#2E3236;--h:190px;--w:48px"><span>What you get</span></button>
+          <button class="book lean" role="tab" id="b-8" aria-controls="ob-8" aria-selected="false" tabindex="-1" style="--c:#2E7D86;--h:182px;--w:46px;--lean:8deg"><span>The rules</span></button>
+          <span class="bookend" aria-hidden="true"></span>
         </div>
-        <div class="from num">$99<small>per month</small></div>
+      </div>
+      <div class="book-stage">
+        <div class="open-book" id="ob-1" role="tabpanel" aria-labelledby="b-1" style="--c:#2D4B73">
+          <div class="pg l"><p class="kick">Book 1</p><h3>Competitor prices</h3><p>Know the moment a rival changes a price, so you can react the same day instead of next month.</p><span class="pnum">1</span></div>
+          <div class="pg r"><ul><li>The products and stores you choose</li><li>Checked daily, or more often</li><li>Alert only when something changes</li></ul><p class="eg">"store-b dropped the desk lamp 10%. You're now $5 higher."</p><a class="go" href="#contact">Get a free sample &rarr;</a><span class="pnum">2</span></div>
+        </div>
+        <div class="open-book" id="ob-2" role="tabpanel" aria-labelledby="b-2" style="--c:#B5372F" hidden>
+          <div class="pg l"><p class="kick">Book 2</p><h3>Restock alerts</h3><p>When a competitor sells out, their buyers go looking. Be the store that has it in stock.</p><span class="pnum">3</span></div>
+          <div class="pg r"><ul><li>Out-of-stock and back-in-stock alerts</li><li>Track your own supplier pages too</li><li>A daily stock log in your sheet</li></ul><p class="eg">"store-c is out of the USB-C hub. You have 40 left."</p><a class="go" href="#contact">Get a free sample &rarr;</a><span class="pnum">4</span></div>
+        </div>
+        <div class="open-book" id="ob-3" role="tabpanel" aria-labelledby="b-3" style="--c:#E4B53A" hidden>
+          <div class="pg l"><p class="kick">Book 3</p><h3>New listings</h3><p>See what your rivals add to their catalogue, without checking their site every week.</p><span class="pnum">5</span></div>
+          <div class="pg r"><ul><li>New products, the day they appear</li><li>Removed products too</li><li>Price and link for each one</li></ul><p class="eg">"store-d added 3 new air fryers this week."</p><a class="go" href="#contact">Get a free sample &rarr;</a><span class="pnum">6</span></div>
+        </div>
+        <div class="open-book" id="ob-4" role="tabpanel" aria-labelledby="b-4" style="--c:#2F6B4F" hidden>
+          <div class="pg l"><p class="kick">Book 4</p><h3>Reseller prices</h3><p>For brands: check that the stores selling your products stick to your price.</p><span class="pnum">7</span></div>
+          <div class="pg r"><ul><li>Every reseller, one sheet</li><li>Flag anyone under your price</li><li>Screenshot-free proof with links</li></ul><p class="eg">"2 resellers are below your minimum price today."</p><a class="go" href="#contact">Get a free sample &rarr;</a><span class="pnum">8</span></div>
+        </div>
+        <div class="open-book" id="ob-5" role="tabpanel" aria-labelledby="b-5" style="--c:#C9BF9F" hidden>
+          <div class="pg l"><p class="kick">Book 5</p><h3>Reviews and ratings</h3><p>Track star ratings and review counts on public product pages, yours and theirs.</p><span class="pnum">9</span></div>
+          <div class="pg r"><ul><li>Rating and review count over time</li><li>Alert on a sudden drop</li><li>Public pages only, no personal data</li></ul><p class="eg">"Your rating slipped from 4.6 to 4.3 this week."</p><a class="go" href="#contact">Get a free sample &rarr;</a><span class="pnum">10</span></div>
+        </div>
+        <div class="open-book" id="ob-6" role="tabpanel" aria-labelledby="b-6" style="--c:#5B3F6B" hidden>
+          <div class="pg l"><p class="kick">Book 6</p><h3>Website data to Sheets</h3><p>Any public table or list you copy by hand today, delivered to a Google Sheet instead.</p><span class="pnum">11</span></div>
+          <div class="pg r"><ul><li>One-off or on a schedule</li><li>Clean columns, no duplicates</li><li>CSV, Excel or JSON if you prefer</li></ul><p class="eg">"Monday's sheet is ready. 1,240 rows, 0 errors."</p><a class="go" href="#contact">Get a free sample &rarr;</a><span class="pnum">12</span></div>
+        </div>
+        <div class="open-book" id="ob-7" role="tabpanel" aria-labelledby="b-7" style="--c:#2E3236" hidden>
+          <div class="pg l"><p class="kick">Book 7</p><h3>What you get</h3><p>Everything is yours at the end: the code, the data and a short guide to running it.</p><span class="pnum">13</span></div>
+          <div class="pg r"><ul><li>Free 25-row sample within 24 hours</li><li>Most projects done in 2 to 4 days</li><li>30-day fix guarantee</li></ul><p><a class="go" href="example-report.csv" download>Download an example report &rarr;</a></p><span class="pnum">14</span></div>
+        </div>
+        <div class="open-book" id="ob-8" role="tabpanel" aria-labelledby="b-8" style="--c:#2E7D86" hidden>
+          <div class="pg l"><p class="kick">Book 8</p><h3>The rules I follow</h3><p>So your project never puts your store at risk.</p><span class="pnum">15</span></div>
+          <div class="pg r"><ul><li>Public data only</li><li>No logins, no paywalls</li><li>No bypassing CAPTCHAs</li><li>No personal data</li><li>Polite request rates</li></ul><span class="pnum">16</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -425,13 +669,34 @@ footer{background:var(--ink);color:color-mix(in srgb,var(--bg) 60%,transparent);
 <section id="how">
   <div class="wrap">
     <h2>How it works</h2>
-    <p class="sub">You see it working before you pay.</p>
-    <ol class="steps">
-      <li><span class="bar" aria-hidden="true"></span><h3>Send the sites</h3><p>Which websites, which fields, how often.</p></li>
-      <li><span class="bar" aria-hidden="true"></span><h3>Get a free sample</h3><p>Up to 25 real rows within 24 hours.</p></li>
-      <li><span class="bar" aria-hidden="true"></span><h3>Approve a fixed price</h3><p>One quote, one delivery date.</p></li>
-      <li><span class="bar" aria-hidden="true"></span><h3>Get data and alerts</h3><p>Daily runs, checked data, instant alerts.</p></li>
-    </ol>
+    <p class="sub">You see it working before you pay. Here's how a typical job goes.</p>
+    <div class="how-grid">
+      <ol class="how-steps" id="howSteps">
+        <li class="on"><h3>Send the sites</h3><p>Which websites, which fields, how often.</p></li>
+        <li><h3>Get a free sample</h3><p>Up to 25 real rows within 24 hours.</p></li>
+        <li><h3>Approve a fixed price</h3><p>One quote, one delivery date.</p></li>
+        <li><h3>Get data and alerts</h3><p>Daily runs, checked data, instant alerts.</p></li>
+      </ol>
+      <div class="phone" aria-label="Example chat with a client">
+        <div class="screen">
+          <div class="chat-head"><span class="av" aria-hidden="true">S</span><div><b>Store owner</b><small>online</small></div><span class="eg-tag">Example</span></div>
+          <div class="msgs" id="chat">
+            <p class="day" data-step="0">Day 1 &middot; Send the sites</p>
+            <p class="msg in">Hi! Can you track prices on store-b.com? About 20 products, daily.<time>9:14</time></p>
+            <p class="msg out">Yes. Send me 2 or 3 product links and I'll make you a free sample.<time>9:20</time></p>
+            <p class="day" data-step="1">Day 2 &middot; Free sample</p>
+            <div class="msg out file"><span class="ic" aria-hidden="true">CSV</span><div><b>sample-store-b.csv</b><small>25 rows &middot; prices, stock, links</small><time>10:02</time></div></div>
+            <p class="msg in">That's exactly what I need. How much for daily?<time>10:31</time></p>
+            <p class="day" data-step="2">Day 2 &middot; Fixed price</p>
+            <p class="msg out">$50 setup. Alerts go to your Telegram. Ready by Thursday.<time>10:40</time></p>
+            <p class="msg in">Deal.<time>10:42</time></p>
+            <p class="day" data-step="3">Day 4 onward &middot; Alerts</p>
+            <div class="msg bot"><span class="dot" aria-hidden="true"></span><div><b>Price drop on store-b.com</b><br>Desk lamp LED: $49.90 to $44.90 (&minus;10%)<time>07:00</time></div></div>
+            <p class="msg in">Saw it before my coffee.<time>07:06</time></p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -485,21 +750,43 @@ footer{background:var(--ink);color:color-mix(in srgb,var(--bg) 60%,transparent);
   <div class="wrap">
     <h2>Simple, fixed pricing</h2>
     <p class="sub">In USD. Bigger jobs get a quote after the free sample.</p>
-    <div class="price-wrap">
-    <div class="note-p lined price-note" aria-hidden="true"><span class="tape"></span>Free sample first. Always.</div>
-    <table class="prices num">
-      <thead><tr><th>Package</th><th>What's included</th><th style="text-align:right">Price</th></tr></thead>
-      <tbody>
-        <tr><td>Quick extract</td><td>1 site, up to 500 rows, one-time CSV or Google Sheet</td><td class="amt">$45</td></tr>
-        <tr><td>Re-runnable scraper</td><td>1 site, up to 10,000 rows, plus a weekly scheduled run</td><td class="amt">$120</td></tr>
-        <tr><td>Automated pipeline</td><td>Up to 3 sites, daily runs, change alerts</td><td class="amt">$300</td></tr>
-        <tr><td>Price &amp; stock monitor</td><td>Daily checks on your chosen competitor pages, with alerts</td><td class="amt">from $50</td></tr>
-        <tr><td>Care plan</td><td>Up to 10 pages, daily health check, fixes within 48 hours</td><td class="amt">$99/mo</td></tr>
-      </tbody>
-    </table>
+    <div class="price-grid">
+      <div class="receipt-wrap">
+        <div class="receipt num" id="receipt">
+          <p class="c shop">CAYDEN CHAI</p>
+          <p class="c meta">Scraping &amp; price monitoring<br>Singapore &middot; prices in USD</p>
+          <hr>
+          <ul>
+            <li><b>Quick extract</b><span>$45</span><small>1 site, up to 500 rows, one-time CSV or Google Sheet</small></li>
+            <li><b>Re-runnable scraper</b><span>$120</span><small>1 site, up to 10,000 rows, plus a weekly scheduled run</small></li>
+            <li><b>Automated pipeline</b><span>$300</span><small>Up to 3 sites, daily runs, change alerts</small></li>
+            <li><b>Price &amp; stock monitor</b><span>from $50</span><small>Daily checks on your chosen competitor pages, with alerts</small></li>
+            <li><b>Care plan</b><span>$99/mo</span><small>Up to 10 pages, daily health check, fixes within 48 hours</small></li>
+          </ul>
+          <hr>
+          <div class="row"><span>Free sample, 25 rows</span><span>$0.00</span></div>
+          <div class="row"><span>Payment details needed</span><span>NONE</span></div>
+          <div class="row total"><span>TOTAL TODAY</span><span>$0.00</span></div>
+          <hr>
+          <p class="c"><b>30-DAY FIX GUARANTEE</b></p>
+          <p class="c g">If anything I build breaks in the first 30 days, I fix it free.</p>
+          <div class="bars" aria-hidden="true"></div>
+          <p class="c thx">THANK YOU &middot; REPLY WITHIN 24H</p>
+        </div>
+      </div>
+      <div class="price-side">
+        <div class="note-p lined" aria-hidden="true"><span class="tape"></span>Free sample first. Always.</div>
+        <h3>Every package includes</h3>
+        <ul class="ticks">
+          <li>A free sample before you pay anything</li>
+          <li>One fixed price, agreed up front</li>
+          <li>You own the code and the data</li>
+          <li>Every row checked before delivery</li>
+          <li>Fixes free for 30 days</li>
+        </ul>
+        <p class="note">Prefer platform payment protection? Hire me on <a href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Upwork</a> or <a href="https://www.fiverr.com/n1njla" rel="noopener">Fiverr</a>.</p>
+      </div>
     </div>
-    <p class="guarantee"><b>30-day fix guarantee.</b> If anything I build breaks in the first 30 days, I fix it free.</p>
-    <p class="note">Prefer platform payment protection? Hire me on <a href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Upwork</a> or <a href="https://www.fiverr.com/n1njla" rel="noopener">Fiverr</a>.</p>
   </div>
 </section>
 
@@ -623,12 +910,6 @@ footer{background:var(--ink);color:color-mix(in srgb,var(--bg) 60%,transparent);
     notes.forEach(function(n,k){M.animate(n,{opacity:[0,1],y:[-40,0],rotate:[k%2?-12:12,parseFloat(n.style.getPropertyValue('--r'))||0]},{duration:.55,delay:k*.09,ease:[.2,1.25,.4,1]}).then(function(){n.style.transform='';});});
   },{amount:.25});
 
-  // process steps fill in order as you scroll through them
-  var bars=[].slice.call(document.querySelectorAll('.steps .bar'));
-  bars.forEach(function(b){b.style.transform='scaleX(0)';});
-  M.scroll(function(p){
-    bars.forEach(function(b,k){var v=Math.max(0,Math.min(1,p*bars.length*1.25-k));b.style.transform='scaleX('+v+')';});
-  },{target:document.querySelector('.steps'),offset:['start 85%','end 55%']});
 })();
 </script>
 
@@ -659,6 +940,105 @@ footer{background:var(--ink);color:color-mix(in srgb,var(--bg) 60%,transparent);
   });
   var c=document.getElementById('copyEmail');
   c.addEventListener('click',function(){navigator.clipboard&&navigator.clipboard.writeText('caydencmy@gmail.com').then(function(){c.textContent='Copied';setTimeout(function(){c.textContent='Copy';},1800);});});
+})();
+</script>
+<script>
+(function(){
+  var M=window.Motion, reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches, anim=M&&!reduce;
+  document.documentElement.classList.add('js');
+
+  // 1. notebook dot grid drifts slightly as you scroll
+  if(!reduce){
+    var root=document.documentElement, ticking=false;
+    function drift(){ticking=false;root.style.setProperty('--dy',(-(window.scrollY*0.12)%24).toFixed(2)+'px');}
+    window.addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(drift);}},{passive:true});
+    drift();
+  }
+
+  // 1b. each section opens like a notebook page as it scrolls in
+  if(anim){
+    document.querySelectorAll('main > section > .wrap').forEach(function(w){
+      if(w.getBoundingClientRect().top<window.innerHeight*0.9) return;
+      w.style.opacity=0; w.style.transformOrigin='50% 0';
+      w.style.transform='perspective(1400px) rotateX(-9deg) translateY(36px)';
+      M.inView(w,function(){
+        M.animate(0,1,{duration:.8,ease:[.2,.8,.2,1],onUpdate:function(v){
+          w.style.opacity=Math.min(1,v*1.4);
+          w.style.transform='perspective(1400px) rotateX('+(-9*(1-v))+'deg) translateY('+(36*(1-v))+'px)';
+        }}).then(function(){w.style.opacity='';w.style.transform='';w.style.transformOrigin='';});
+      },{margin:'0px 0px -12% 0px'});
+    });
+  }
+
+  // 3. price tags drop onto the rail and swing
+  if(anim){
+    var tags=[].slice.call(document.querySelectorAll('.tag-hang'));
+    tags.forEach(function(t){t.style.opacity=0;});
+    M.inView('.tags',function(){
+      tags.forEach(function(t,k){
+        var r=parseFloat(t.style.getPropertyValue('--r'))||0;
+        M.animate(t,{opacity:[0,1],y:[-46,0],rotate:[k%2?-14:14,r]},{duration:.9,delay:k*.12,ease:[.2,1.5,.35,1]})
+          .then(function(){t.style.transform='';});
+      });
+    },{amount:.3});
+  }
+
+  // 6. bookshelf: hover, focus or tap a book to open it
+  var books=[].slice.call(document.querySelectorAll('.book')), cur=0;
+  function openBook(i,fromKey){
+    if(i===cur){return;}
+    var prev=books[cur]; prev.setAttribute('aria-selected','false'); prev.tabIndex=-1;
+    document.getElementById(prev.getAttribute('aria-controls')).hidden=true;
+    var b=books[i]; b.setAttribute('aria-selected','true'); b.tabIndex=0; cur=i;
+    var p=document.getElementById(b.getAttribute('aria-controls')); p.hidden=false;
+    if(fromKey) b.focus();
+    if(anim){
+      M.animate(p.querySelector('.pg.r'),{rotateY:[-75,0],opacity:[0,1]},{duration:.5,ease:[.2,.8,.2,1]});
+      M.animate(p.querySelector('.pg.l'),{opacity:[.3,1]},{duration:.35});
+    }
+  }
+  books.forEach(function(b,i){
+    b.addEventListener('mouseenter',function(){openBook(i);});
+    b.addEventListener('focus',function(){openBook(i);});
+    b.addEventListener('click',function(){openBook(i);});
+    b.addEventListener('keydown',function(e){
+      var k=e.key, n=null;
+      if(k==='ArrowRight'||k==='ArrowDown') n=(i+1)%books.length;
+      else if(k==='ArrowLeft'||k==='ArrowUp') n=(i-1+books.length)%books.length;
+      else if(k==='Home') n=0; else if(k==='End') n=books.length-1;
+      if(n!==null){e.preventDefault();openBook(n,true);}
+    });
+  });
+
+  // 5. chat thread: messages appear as you scroll, steps on the left follow along
+  var chatItems=[].slice.call(document.querySelectorAll('#chat > *'));
+  if(anim){
+    chatItems.forEach(function(m){m.style.opacity=0;});
+    chatItems.forEach(function(m){
+      M.inView(m,function(){
+        var out=m.classList.contains('out');
+        M.animate(m,{opacity:[0,1],y:[16,0],scale:[.94,1],x:[out?14:m.classList.contains('day')?0:-14,0]},{duration:.4,ease:[.2,1.2,.4,1]});
+      },{margin:'0px 0px -14% 0px'});
+    });
+  }
+  var days=[].slice.call(document.querySelectorAll('#chat .day')), steps=[].slice.call(document.querySelectorAll('#howSteps li'));
+  function syncSteps(){
+    var line=window.innerHeight*0.62, on=0;
+    days.forEach(function(d,k){if(d.getBoundingClientRect().top<line) on=k;});
+    steps.forEach(function(s,k){s.classList.toggle('on',reduce?true:k<=on);});
+  }
+  var sTick=false;
+  window.addEventListener('scroll',function(){if(!sTick){sTick=true;requestAnimationFrame(function(){sTick=false;syncSteps();});}},{passive:true});
+  syncSteps();
+
+  // 4. receipt prints out when it comes into view
+  if(anim){
+    var rc=document.getElementById('receipt');
+    rc.style.clipPath='inset(0 0 100% 0)';
+    M.inView(rc.parentNode,function(){
+      M.animate(rc,{clipPath:['inset(0 0 100% 0)','inset(0 0 0% 0)']},{duration:1.5,ease:[.45,.05,.55,.95]}).then(function(){rc.style.clipPath='';});
+    },{amount:.25});
+  }
 })();
 </script>
 </body>
