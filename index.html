@@ -19,6 +19,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..800&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<script>
+(function(){try{var q=new URLSearchParams(location.search),f=(q.get('from')||'').toLowerCase();
+if(q.get('for')==='stores'||['email','linkedin','facebook','stores'].indexOf(f)>-1)document.documentElement.classList.add('for-stores');}catch(e){}})();
+</script>
 <style>
 :root{
   --bg:#F3F4F1; --surface:#FFFFFF; --ink:#1A1D21; --muted:#5E646B; --rule:#D5D8D2;
@@ -500,6 +504,23 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
 .founding{border:2px dashed var(--up);border-radius:6px;padding:14px 18px;margin:0 0 28px;font-size:15px;color:var(--muted)}
 .founding b{display:block;color:var(--up);font-size:16px;margin-bottom:2px}
 .receipt li > span{white-space:nowrap}
+/* ================= v7: store view + real example ================= */
+.for-stores .not-store{display:none!important}
+html:not(.for-stores) .store-only{display:none!important}
+.proof{display:grid;grid-template-columns:1.15fr 1fr;gap:48px;align-items:center}
+@media (max-width:900px){.proof{grid-template-columns:1fr;gap:28px}}
+.proof-copy h2{margin-top:0}
+.proof-copy p{color:var(--muted);margin:0 0 20px;max-width:34em}
+.proof-card{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:24px}
+.proof-card .prod{font-weight:700;font-size:19px;margin:0 0 2px;line-height:1.3}
+.proof-card .prod-sub{color:var(--muted);font-size:14px;margin:0 0 16px}
+.proof-row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-top:1px solid var(--rule)}
+.proof-row span{color:var(--muted)}
+.proof-row b{font-size:30px;font-weight:800;font-stretch:112%;line-height:1.1}
+.proof-row.lo b{color:var(--up)}
+.proof-row.hi b{color:var(--drop)}
+.proof-gap{margin:14px 0 0;padding:12px 14px;background:var(--tag);color:var(--tag-ink);border-radius:4px;font-weight:600}
+.proof-note{font-size:13px;color:var(--muted);margin:12px 0 0}
 </style>
 </head>
 <body>
@@ -509,8 +530,8 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
     <a class="brand" href="#">Cayden Chai</a>
     <nav aria-label="Main">
       <a href="#services">Services</a>
-      <a href="#anything">Anything else</a>
-      <a href="#work">Work</a>
+      <a class="not-store" href="#anything">Anything else</a>
+      <a class="not-store" href="#work">Work</a>
       <a href="#pricing">Pricing</a>
       <a href="#faq">FAQ</a>
       <a class="cta-sm" href="#contact">Get a free sample</a>
@@ -524,7 +545,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
     <div class="hero-copy">
       <p class="from-chip" id="fromChip" hidden></p>
       <h1>Know when a competitor changes their price.</h1>
-      <p class="lede">I track your competitors' prices and stock every day and send you an alert the moment something changes. You see a free sample before you pay.</p>
+      <p class="lede">I track your competitors' prices and stock every day and send you an alert the moment something changes. I find the matching products and set it all up, so there's no software to learn and no dashboard to check. You see a free sample before you pay.</p>
       <div class="actions">
         <a class="btn primary" href="#contact">Get a free 25-row sample<small>Pay nothing until you've seen your data</small></a>
         <a class="btn ghost" href="#pricing">See pricing</a>
@@ -582,6 +603,25 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
     </ul>
   </div>
 </div>
+
+<section id="proof">
+  <div class="wrap proof">
+    <div class="proof-copy">
+      <h2>A real price gap, found in Singapore</h2>
+      <p>In October 2026 I checked over 30,000 public product prices across 88 Singapore online stores. Here is one product I found at two of them.</p>
+      <p>Same brand, same set, two Singapore stores. If a competitor priced one of your products like this, would you know?</p>
+      <a class="btn primary" href="#contact">Check my store for free</a>
+    </div>
+    <div class="proof-card num">
+      <p class="prod">Battat 3-piece Micro Construction Fleet</p>
+      <p class="prod-sub">The same product at two Singapore online stores</p>
+      <div class="proof-row lo"><span>Store A</span><b>S$29.90</b></div>
+      <div class="proof-row hi"><span>Store B</span><b>S$69.90</b></div>
+      <p class="proof-gap">S$40.00 apart. Store B charges 2.3 times as much.</p>
+      <p class="proof-note">Real public prices from my October 2026 scan. Store names hidden.</p>
+    </div>
+  </div>
+</section>
 
 <section id="problem">
   <div class="wrap">
@@ -655,7 +695,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
         <p class="amt num"><small>+ <span class="money" data-usd="50" data-sgd="65">$50</span> setup</small><b class="money" data-usd="79" data-sgd="99">$79</b><small>per month</small></p>
         <a class="tag-cta" href="#contact" data-plan="Growth monitor (100 products, 10 competitors, daily)">Start with this</a>
       </article></div>
-      <div class="tag-hang" style="--r:-1deg"><article class="tag">
+      <div class="tag-hang not-store" style="--r:-1deg"><article class="tag">
         <p class="sku">SKU SCR-01 &middot; ONE-OFF</p>
         <h3>Custom web scraper</h3>
         <p>Pull data from any public website into Google Sheets, CSV or your API.</p>
@@ -691,7 +731,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
   </div>
 </section>
 
-<section id="shelf">
+<section id="shelf" class="not-store">
   <div class="wrap">
     <h2>What can I track for you?</h2>
     <p class="sub">Pull a book off the shelf. Each one is a job I can set up for your store.</p>
@@ -748,7 +788,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
   </div>
 </section>
 
-<section id="anything">
+<section id="anything" class="not-store">
   <div class="wrap">
     <h2>Stuck on something else? Tell me the problem.</h2>
     <p class="sub">I build software end to end, not just scrapers. If a task is eating your week, there's a good chance I can automate it. Here are some things I can build:</p>
@@ -791,7 +831,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
             <div class="msg out file"><span class="ic" aria-hidden="true">CSV</span><div><b>sample-store-b.csv</b><small>25 rows &middot; prices, stock, links</small><time>10:02</time></div></div>
             <p class="msg in">That's exactly what I need. How much for daily?<time>10:31</time></p>
             <p class="day" data-step="2">Day 2 &middot; Fixed price</p>
-            <p class="msg out">Starter plan: $50 setup, then $29 a month. Alerts go to your Telegram. Ready by Thursday.<time>10:40</time></p>
+            <p class="msg out">Starter plan: <span class="money" data-usd="50" data-sgd="65">$50</span> setup, then <span class="money" data-usd="29" data-sgd="39">$29</span> a month. Alerts go to your Telegram. Ready by Thursday.<time>10:40</time></p>
             <p class="msg in">Deal.<time>10:42</time></p>
             <p class="day" data-step="3">Day 4 onward &middot; Alerts</p>
             <div class="msg bot"><span class="dot" aria-hidden="true"></span><div><b>Price drop on store-b.com</b><br>Desk lamp LED: $49.90 to $44.90 (&minus;10%)<time>07:00</time></div></div>
@@ -813,7 +853,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
   </div>
 </section>
 
-<section id="work">
+<section id="work" class="not-store">
   <div class="wrap">
     <h2>Work that's running today</h2>
     <div class="cases">
@@ -852,19 +892,20 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
 <section id="pricing">
   <div class="wrap">
     <h2>Simple, fixed pricing</h2>
-    <p class="sub">Monthly plans for monitoring, one-off prices for scrapers. Bigger jobs get a quote after the free sample.</p>
+    <p class="sub not-store">Monthly plans for monitoring, one-off prices for scrapers. Bigger jobs get a quote after the free sample.</p>
+    <p class="sub store-only">Two monthly plans, cancel anytime. Bigger catalogues get a quote after the free sample.</p>
     <div class="price-grid">
       <div class="receipt-wrap">
         <div class="receipt num" id="receipt">
           <p class="c shop">CAYDEN CHAI</p>
-          <p class="c meta">Scraping &amp; price monitoring<br>Singapore &middot; prices in <span class="cur-name">USD</span></p>
+          <p class="c meta"><span class="not-store">Scraping &amp; price monitoring</span><span class="store-only">Price &amp; stock monitoring</span><br>Singapore &middot; prices in <span class="cur-name">USD</span></p>
           <hr>
           <ul>
             <li><b>Starter monitor</b><span><span class="money" data-usd="29" data-sgd="39">$29</span>/mo</span><small>20 products, 3 competitors, daily alerts. + <span class="money" data-usd="50" data-sgd="65">$50</span> setup</small></li>
             <li><b>Growth monitor</b><span><span class="money" data-usd="79" data-sgd="99">$79</span>/mo</span><small>100 products, 10 competitors, stock + new listings. + <span class="money" data-usd="50" data-sgd="65">$50</span> setup</small></li>
-            <li><b>Quick extract</b><span class="money" data-usd="45" data-sgd="59">$45</span><small>1 site, up to 500 rows, one-time CSV or Google Sheet</small></li>
-            <li><b>Re-runnable scraper</b><span class="money" data-usd="120" data-sgd="159">$120</span><small>1 site, up to 10,000 rows, plus a weekly scheduled run</small></li>
-            <li><b>Custom build</b><span>QUOTE</span><small>Bigger monitors, other automations, anything else. Quoted after the free sample</small></li>
+            <li class="not-store"><b>Quick extract</b><span class="money" data-usd="45" data-sgd="59">$45</span><small>1 site, up to 500 rows, one-time CSV or Google Sheet</small></li>
+            <li class="not-store"><b>Re-runnable scraper</b><span class="money" data-usd="120" data-sgd="159">$120</span><small>1 site, up to 10,000 rows, plus a weekly scheduled run</small></li>
+            <li class="not-store"><b>Custom build</b><span>QUOTE</span><small>Bigger monitors, other automations, anything else. Quoted after the free sample</small></li>
           </ul>
           <hr>
           <div class="row"><span>Free sample, 25 rows</span><span class="money" data-usd="0.00" data-sgd="0.00">$0.00</span></div>
@@ -888,9 +929,9 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
           <li>You own the code and the data</li>
           <li>Every row checked before delivery</li>
           <li>Monitors: fixes included, cancel anytime</li>
-          <li>One-off scrapers: fixes free for 30 days</li>
+          <li class="not-store">One-off scrapers: fixes free for 30 days</li>
         </ul>
-        <p class="note">Prefer platform payment protection? Hire me on <a href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Upwork</a> or <a href="https://www.fiverr.com/n1njla" rel="noopener">Fiverr</a>.</p>
+        <p class="note not-store">Prefer platform payment protection? Hire me on <a href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Upwork</a>.</p>
       </div>
     </div>
   </div>
@@ -902,15 +943,17 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
       <figure class="polaroid"><span class="tape"></span><div class="ph"><img src="cayden.jpg" alt="Cayden Chai" onerror="this.remove()"><span aria-hidden="true">CC</span></div><figcaption>Cayden, Singapore</figcaption></figure>
       <div class="note-p lined reply-note" aria-hidden="true"><span class="pin"></span>I reply within 24h (GMT+8)</div>
       <h2>Hi, I'm Cayden</h2>
-      <p>I'm a developer in Singapore. I build scrapers like production software: scheduled, tested and watched, so your data never quietly goes wrong.</p>
+      <p class="not-store">I'm a developer in Singapore. I build scrapers like production software: scheduled, tested and watched, so your data never quietly goes wrong.</p>
+      <p class="store-only">I'm a developer in Singapore. I build monitors like production software: scheduled, tested and watched, so your alerts stay accurate.</p>
       <p>I've also sold face to face to business owners, so I focus on what the data is for, not just how to collect it.</p>
     </div>
     <ul class="creds">
       <li>Anthropic certified<span>Building with the Claude API</span></li>
       <li>Echelon Singapore 2026<span>Promising AI Workflow Builder</span></li>
-      <li>Harvard Business School<span>Mentee, 1 of 18 selected</span></li>
-      <li>LvlUp Ventures<span>Venture Scout</span></li>
-      <li>Jakarta International Hackathon<span>1st place</span></li>
+      <li class="not-store">Harvard Business School<span>Mentee, 1 of 18 selected</span></li>
+      <li class="not-store">LvlUp Ventures<span>Venture Scout</span></li>
+      <li class="not-store">Jakarta International Hackathon<span>1st place</span></li>
+      <li class="store-only">Prices checked so far<span>30,000+ across 88 SG stores</span></li>
       <li>Languages<span>English, Mandarin</span></li>
     </ul>
   </div>
@@ -922,6 +965,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
     <details><summary>Is this legal?</summary><p>I only collect public data. No logins, no bypassing CAPTCHAs or paywalls, and no personal data.</p></details>
     <details><summary>What if the website changes?</summary><p>You get an alert instead of bad data. Monitor plans include fixes for as long as you subscribe. One-off scrapers get free fixes for 30 days.</p></details>
     <details><summary>Which sites can you track?</summary><p>Most public online stores and marketplaces, including Shopify. Send a link and I'll confirm with a free sample.</p></details>
+    <details><summary>How is this different from price-tracking apps?</summary><p>Many apps are self-serve: you add the products and competitor links yourself, then check a dashboard. I find the matching products across Singapore stores, set everything up and send the changes to your phone. If something breaks, you message a person in Singapore.</p></details>
     <details><summary>What format do I get?</summary><p>Google Sheets, CSV, Excel, JSON or your API. Alerts on Telegram, Slack or email.</p></details>
     <details><summary>How fast is it?</summary><p>The sample comes within 24 hours. Most projects take 2 to 4 days.</p></details>
   </div>
@@ -930,7 +974,8 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
 <section id="contact" class="contact">
   <div class="wrap">
     <h2>Get a free sample</h2>
-    <p class="sub">Tell me what you need, or the problem you're facing. I'll reply within 24 hours, with up to 25 real rows if it's a scraping job.</p>
+    <p class="sub not-store">Tell me what you need, or the problem you're facing. I'll reply within 24 hours, with up to 25 real rows if it's a scraping job.</p>
+    <p class="sub store-only">Send your store's website. I'll find your products on other Singapore stores and reply within 24 hours with a free price comparison. No payment details.</p>
     <div class="contact-grid">
     <form class="cform" id="cform" novalidate>
       <div><label for="f-site">Website(s), if any</label><input id="f-site" name="fi-text-websites" placeholder="competitor-store.com"></div>
@@ -940,14 +985,13 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
       <input type="hidden" name="fi-text-plan" id="f-plan" value="">
       <div class="row-actions">
         <button class="btn primary" type="submit" id="f-submit">Send my sample request</button>
-        <a class="btn ghost" href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Hire me on Upwork</a>
+        <a class="btn ghost not-store" href="https://www.upwork.com/freelancers/~017d12a38d3203f9e2" rel="noopener">Hire me on Upwork</a>
         <p class="reassure" id="f-status" role="status" aria-live="polite">Free, no payment details. You get up to 25 real rows within 24 hours.</p>
       </div>
     </form>
-    <div class="note-p lined tip-note" aria-hidden="true"><span class="tape"></span>Tip: paste 2 or 3 product links. I'll start the sample with those.</div>
+    <div class="note-p lined tip-note" aria-hidden="true"><span class="tape"></span><span class="not-store">Tip: paste 2 or 3 product links. I'll start the sample with those.</span><span class="store-only">Tip: your store's link is enough. Name competitors if you know them.</span></div>
     </div>
     <div class="links">
-      <a href="https://www.fiverr.com/n1njla" rel="noopener">Fiverr</a>
       <a href="https://www.linkedin.com/in/cayden-chai-ming-yang" rel="noopener">LinkedIn</a>
       <span>caydencmy@gmail.com <button class="copy" type="button" id="copyEmail">Copy</button></span>
     </div>
@@ -1028,7 +1072,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
   wall.forEach(function(n){n.addEventListener('click',function(){n.setAttribute('aria-pressed',n.getAttribute('aria-pressed')==='true'?'false':'true');upd();});});
   // source-matched greeting + hidden source field (?from=upwork|fiverr|email|linkedin)
   var src=(new URLSearchParams(location.search).get('from')||'').toLowerCase();
-  var greet={upwork:'Here from Upwork? Same offer, same free sample.',fiverr:'Here from Fiverr? Same offer, same free sample.',email:'Thanks for clicking through from my email.',linkedin:'Hi from LinkedIn. The free sample offer stands.'};
+  var greet={upwork:'Here from Upwork? Same offer, same free sample.',fiverr:'Here from Fiverr? Same offer, same free sample.',email:'Thanks for clicking through from my email.',linkedin:'Hi from LinkedIn. The free sample offer stands.',facebook:'Hi from Facebook. The free comparison offer stands.'};
   if(greet[src]){var chip=document.getElementById('fromChip');chip.textContent=greet[src];chip.hidden=false;}
   document.getElementById('f-source').value=src||(document.referrer?new URL(document.referrer).hostname:'direct');
   // contact form -> Forminit
@@ -1152,7 +1196,7 @@ main > section::before{content:"p. " counter(pg,decimal-leading-zero);position:a
 (function(){
   // currency switch (USD / SGD), remembered per visitor, SGD by default for Singapore time zone
   var cur='usd';
-  try{cur=localStorage.getItem('cur')||((Intl.DateTimeFormat().resolvedOptions().timeZone||'')==='Asia/Singapore'?'sgd':'usd');}catch(e){}
+  try{cur=document.documentElement.classList.contains('for-stores')?'sgd':(localStorage.getItem('cur')||((Intl.DateTimeFormat().resolvedOptions().timeZone||'')==='Asia/Singapore'?'sgd':'usd'));}catch(e){}
   function fmt(v,c){return (c==='sgd'?'S$':'$')+v;}
   function setCur(c){
     cur=c; try{localStorage.setItem('cur',c);}catch(e){}
